@@ -85,7 +85,7 @@ MP.Time_To_Full = function(difference)
     while difference > 0 do
         ticks = ticks + 1
         total_time = total_time + 10
-        difference = difference - MP.Enum.BASE_HMP - ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * ticks) - MP.Equipment.MP() - MP.Clear_Mind.MP()
+        difference = difference - MP.Enum.BASE_HMP - ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * ticks) - MP.Equipment.MP() - MP.Clear_Mind.MP() - Config.Settings.Food_HMP
     end
 
     Rest.Total_Time = total_time
@@ -95,7 +95,7 @@ end
 -- Calculates how much the player should get on the next tick.
 -- ------------------------------------------------------------------------------------------------------
 MP.Next_Tick = function()
-    return MP.Enum.BASE_HMP + ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * Rest.Ticks) + MP.Equipment.MP() + MP.Clear_Mind.MP()
+    return MP.Enum.BASE_HMP + ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * Rest.Ticks) + MP.Equipment.MP() + MP.Clear_Mind.MP() + Config.Settings.Food_HMP
 end
 
 -- ------------------------------------------------------------------------------------------------------
