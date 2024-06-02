@@ -31,20 +31,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Max_MP = function()
     -- This value doesn't update in time. I usually have to open the equipment menu to get it to update.
-    -- However, I need a fallback option for max MP if the MPP is zero.
     local player = AshitaCore:GetMemoryManager():GetPlayer()
     if not player then return 0 end
-    local max_mp = player:GetMPMax()
-
-    local party = AshitaCore:GetMemoryManager():GetParty()
-    if not party then return 0 end
-    if party:GetMemberIsActive(0) == 1 then
-        local mpp = party:GetMemberMPPercent(0)
-        local current_mp = Ashita.Current_MP()
-        if mpp > 0 then max_mp = math.ceil((current_mp / mpp) * 100) end
-    end
-
-    return max_mp
+    return player:GetMPMax()
 end
 
 -- ------------------------------------------------------------------------------------------------------
