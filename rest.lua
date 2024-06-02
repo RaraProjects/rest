@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "0.9.0"
+addon.version = "06.02.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -47,6 +47,7 @@ Rest = T{
     Ticks      = 0,
     Mod        = 20,
     MP_Needed  = 0,
+    Next_MP    = 0,
 }
 
 -- ------------------------------------------------------------------------------------------------------

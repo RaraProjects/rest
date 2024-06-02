@@ -16,8 +16,9 @@ Config.Defaults = T{
 }
 
 Config.Settings = T{}
-Config.Settings.Draggable_Width = 150
+Config.Settings.Draggable_Width = 100
 Config.Settings.Food_HMP = 0            -- This won't get saved between settings.
+Config.Settings.Scaling_Set = false
 
 -- ------------------------------------------------------------------------------------------------------
 -- Populates the configuration window.
@@ -26,6 +27,7 @@ Config.Display = function()
     if not Ashita.States.Zoning and Config.Visible then
         if UI.Begin("Settings", {Config.Visible}, Config.Window_Flags) then
             Rest.Settings.Config.X_Pos, Rest.Settings.Config.Y_Pos = UI.GetWindowPos()
+            Config.Set_Window_Scale()
             if UI.BeginTabBar("Settings Tabs", ImGuiTabBarFlags_None) then
                 if UI.BeginTabItem("MP") then
                     Config.Options()
@@ -52,6 +54,7 @@ Config.Options = function()
     Config.Settings.Background()
     Config.Settings.Width()
     Config.Settings.Height()
+    Config.Settings.Window_Scale()
     Config.Settings.Revert()
 end
 
@@ -153,6 +156,19 @@ Config.Settings.Background = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Sets window scaling.
+------------------------------------------------------------------------------------------------------
+Config.Settings.Window_Scale = function()
+    local window_scale = {[1] = Rest.Settings.Bar.Window_Scaling}
+    UI.SetNextItemWidth(Config.Settings.Draggable_Width)
+    if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.2f", ImGuiSliderFlags_None) then
+        Rest.Settings.Bar.Window_Scaling = window_scale[1]
+        Bar.Scaling_Set = false
+        Config.Scaling_Set = false
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Revert settings to defaults.
 ------------------------------------------------------------------------------------------------------
 Config.Settings.Revert = function()
@@ -165,5 +181,15 @@ Config.Settings.Revert = function()
             Rest.Settings.Bar.Show_Time_Remaining = Bar.Defaults.Show_Time_Remaining
             Rest.Settings.Bar.Show_Background     = Bar.Defaults.Show_Background
         end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the window scaling.
+------------------------------------------------------------------------------------------------------
+Config.Set_Window_Scale = function()
+    if not Config.Scaling_Set then
+        UI.SetWindowFontScale(Rest.Settings.Bar.Window_Scaling)
+        Config.Scaling_Set = true
     end
 end

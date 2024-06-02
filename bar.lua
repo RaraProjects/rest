@@ -17,7 +17,10 @@ Bar.Defaults = T{
     Show_Next_Tick = true,
     Show_MP_Needed = false,
     Show_Background = false,
+    Window_Scaling = 1,
 }
+
+Bar.Scaling_Set = false
 
 -- ------------------------------------------------------------------------------------------------------
 -- Draws the resting progress bar.
@@ -29,8 +32,9 @@ Bar.Display = function()
     UI.SetNextWindowSize({Rest.Settings.Bar.Width, -1}, ImGuiCond_Always)
     if UI.Begin("Rest", true, flags) then
         Rest.Settings.Bar.X_Pos, Rest.Settings.Bar.Y_Pos = UI.GetWindowPos()
+        Bar.Set_Window_Scale()
 
-        if Rest.Settings.Config.Show_MP then UI.Text("MP: " .. tostring(Ashita.Current_MP()) .. "/" .. tostring(Ashita.Max_MP())) end
+        if Rest.Settings.Config.Show_MP then UI.Text("MP: " .. tostring(Ashita.Current_MP()) .. "/" .. tostring(Ashita.Max_MP()) .. " (" .. (Rest.Next_MP) .. ")") end
 
         UI.ProgressBar(MP.Progress(), {-1, Rest.Settings.Bar.Height}, "")
 
@@ -58,4 +62,14 @@ Bar.Display = function()
 
     end
     UI.End()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the window scaling.
+------------------------------------------------------------------------------------------------------
+Bar.Set_Window_Scale = function()
+    if not Bar.Scaling_Set then
+        UI.SetWindowFontScale(Rest.Settings.Bar.Window_Scaling)
+        Bar.Scaling_Set = true
+    end
 end

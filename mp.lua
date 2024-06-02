@@ -116,8 +116,11 @@ MP.Next_Tick = function()
     MP.Breakdown.Gear = MP.Equipment.MP() or 0
     MP.Breakdown.CM = MP.Clear_Mind.MP() or 0
     MP.Breakdown.Food = Config.Settings.Food_HMP or 0
+    local tick_amount = MP.Breakdown.Base + MP.Breakdown.Increment + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
 
-    return MP.Breakdown.Base + MP.Breakdown.Increment + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
+    Rest.Next_MP = Ashita.Current_MP() + tick_amount
+
+    return tick_amount
 end
 
 -- ------------------------------------------------------------------------------------------------------
