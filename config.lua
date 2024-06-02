@@ -11,6 +11,8 @@ Config.Defaults = T{
     X_Pos = 100,
     Y_Pos = 100,
     Use_Food = false,
+    Show_Breakdown = false,
+    Show_MP = true,
 }
 
 Config.Settings = T{}
@@ -42,8 +44,10 @@ end
 Config.Options = function()
     Config.Settings.Use_Food()
     if Rest.Settings.Config.Use_Food then Config.Settings.Food() end
+    Config.Settings.Show_MP()
     Config.Settings.Time_Remaining()
     Config.Settings.Next_Tick()
+    Config.Settings.Breakdown()
     Config.Settings.MP_Needed()
     Config.Settings.Background()
     Config.Settings.Width()
@@ -96,6 +100,16 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles whether time remaining clock shows.
 ------------------------------------------------------------------------------------------------------
+Config.Settings.Show_MP = function()
+    if UI.Checkbox("Show MP", {Rest.Settings.Config.Show_MP}) then
+        Rest.Settings.Config.Show_MP = not Rest.Settings.Config.Show_MP
+    end
+end
+
+
+------------------------------------------------------------------------------------------------------
+-- Toggles whether time remaining clock shows.
+------------------------------------------------------------------------------------------------------
 Config.Settings.Time_Remaining = function()
     if UI.Checkbox("Show Time Remaining", {Rest.Settings.Bar.Show_Time_Remaining}) then
         Rest.Settings.Bar.Show_Time_Remaining = not Rest.Settings.Bar.Show_Time_Remaining
@@ -117,6 +131,15 @@ end
 Config.Settings.Next_Tick = function()
     if UI.Checkbox("Show Next Tick", {Rest.Settings.Bar.Show_Next_Tick}) then
         Rest.Settings.Bar.Show_Next_Tick = not Rest.Settings.Bar.Show_Next_Tick
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles whether the tick breakdown will show.
+------------------------------------------------------------------------------------------------------
+Config.Settings.Breakdown = function()
+    if UI.Checkbox("Show Breakdown", {Rest.Settings.Config.Show_Breakdown}) then
+        Rest.Settings.Config.Show_Breakdown = not Rest.Settings.Config.Show_Breakdown
     end
 end
 

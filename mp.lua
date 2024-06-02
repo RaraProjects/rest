@@ -1,8 +1,8 @@
 MP = T{}
 
 MP.Enum = T{
-    BASE_HMP = 13,   -- Horizon: 12
-    INC_HMP  = 1,    -- Horizon: 4
+    BASE_HMP = 12,
+    INC_HMP  = 4,
 }
 
 require("resources.hmp_items")
@@ -11,6 +11,15 @@ require("resources.clear_mind")
 MP.Equipment = T{}
 MP.Clear_Mind = T{}
 MP.Additional = T{}
+
+MP.Breakdown = T{
+    Base = MP.Enum.BASE_HMP,
+    Increment = 0,
+    Bonus = 0,
+    Gear = 0,
+    CM = 0,
+    Food = 0,
+}
 
 -- Horizon HMP Documentation
 -- https://horizonffxi.wiki/MP_Recovered_While_Healing
@@ -36,6 +45,7 @@ MP.Check_Resting_Status = function()
         Rest.Duration = 0
         Rest.Total_Time = 0
         Rest.Ticks = 0
+        Rest.MP_Needed = 0
 
     elseif Rest.Is_Resting then                                 -- Currently resting.
         Rest.Duration = os.time() - Rest.Tick_Time
@@ -56,6 +66,7 @@ MP.Remaining = function()
     local curr_mp = Ashita.Current_MP()
 
     local difference = max_mp - curr_mp
+
     if difference ~= Rest.MP_Needed then
         if (Rest.MP_Needed - difference) > MP.Enum.BASE_HMP then   -- Resting Tick
             Rest.Tick_Time = os.time()
@@ -85,7 +96,12 @@ MP.Time_To_Full = function(difference)
     while difference > 0 do
         ticks = ticks + 1
         total_time = total_time + 10
-        difference = difference - MP.Enum.BASE_HMP - ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * ticks) - MP.Equipment.MP() - MP.Clear_Mind.MP() - Config.Settings.Food_HMP
+        difference = difference
+                     - MP.Enum.BASE_HMP + MP.Additional.Max_Level()
+                     - ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * ticks)
+                     - MP.Equipment.MP()
+                     - MP.Clear_Mind.MP()
+                     - Config.Settings.Food_HMP
     end
 
     Rest.Total_Time = total_time
@@ -95,7 +111,13 @@ end
 -- Calculates how much the player should get on the next tick.
 -- ------------------------------------------------------------------------------------------------------
 MP.Next_Tick = function()
-    return MP.Enum.BASE_HMP + ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * Rest.Ticks) + MP.Equipment.MP() + MP.Clear_Mind.MP() + Config.Settings.Food_HMP
+    MP.Breakdown.Base = MP.Enum.BASE_HMP + MP.Additional.Max_Level()
+    MP.Breakdown.Increment = ((MP.Enum.INC_HMP + MP.Additional.Max_Level()) * Rest.Ticks) or 0
+    MP.Breakdown.Gear = MP.Equipment.MP() or 0
+    MP.Breakdown.CM = MP.Clear_Mind.MP() or 0
+    MP.Breakdown.Food = Config.Settings.Food_HMP or 0
+
+    return MP.Breakdown.Base + MP.Breakdown.Increment + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -112,10 +134,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 MP.Equipment.MP = function()
     local additional_hmp = 0
-    for slot, slot_data in pairs(Ashita.Slots) do
+    for slot, _ in pairs(Ashita.Slots) do
         local item_id = Ashita.Equipment(slot)
-        if HMP[slot_data.en] and HMP[slot_data.en][item_id] then
-            additional_hmp = additional_hmp + HMP[slot_data.en][item_id]
+        if HMP[item_id] then
+            additional_hmp = additional_hmp + HMP[item_id]
         end
     end
     return additional_hmp
