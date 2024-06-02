@@ -1,67 +1,9 @@
-Config = T{}
-
-Config.Visible = false
-Config.Window_Flags = bit.bor(
-    ImGuiWindowFlags_AlwaysAutoResize,
-    ImGuiWindowFlags_NoFocusOnAppearing,
-    ImGuiWindowFlags_NoNav,
-    ImGuiWindowFlags_NoTitleBar)
-
-Config.Defaults = T{
-    X_Pos = 100,
-    Y_Pos = 100,
-    Use_Food = false,
-    Show_Breakdown = false,
-    Show_MP = true,
-}
-
-Config.Settings = T{}
-Config.Settings.Draggable_Width = 100
-Config.Settings.Food_HMP = 0            -- This won't get saved between settings.
-Config.Settings.Scaling_Set = false
-
--- ------------------------------------------------------------------------------------------------------
--- Populates the configuration window.
--- ------------------------------------------------------------------------------------------------------
-Config.Display = function()
-    if not Ashita.States.Zoning and Config.Visible then
-        if UI.Begin("Settings", {Config.Visible}, Config.Window_Flags) then
-            Rest.Settings.Config.X_Pos, Rest.Settings.Config.Y_Pos = UI.GetWindowPos()
-            Config.Set_Window_Scale()
-            if UI.BeginTabBar("Settings Tabs", ImGuiTabBarFlags_None) then
-                if UI.BeginTabItem("MP") then
-                    Config.Options()
-                    UI.EndTabItem()
-                end
-                UI.EndTabBar()
-            end
-            UI.End()
-        end
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Shows configuration options.
--- ------------------------------------------------------------------------------------------------------
-Config.Options = function()
-    Config.Settings.Use_Food()
-    if Rest.Settings.Config.Use_Food then Config.Settings.Food() end
-    Config.Settings.Show_MP()
-    Config.Settings.Time_Remaining()
-    Config.Settings.Next_Tick()
-    Config.Settings.Breakdown()
-    Config.Settings.MP_Needed()
-    Config.Settings.Background()
-    Config.Settings.Width()
-    Config.Settings.Height()
-    Config.Settings.Window_Scale()
-    Config.Settings.Revert()
-end
+Config.Widgets = T{}
 
 ------------------------------------------------------------------------------------------------------
 -- Sets rest bar width.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Width = function()
+Config.Widgets.Width = function()
     local width = {[1] = Rest.Settings.Bar.Width}
     UI.SetNextItemWidth(Config.Settings.Draggable_Width)
     if UI.DragInt("Width", width, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
@@ -72,7 +14,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets rest bar height.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Height = function()
+Config.Widgets.Height = function()
     local height = {[1] = Rest.Settings.Bar.Height}
     UI.SetNextItemWidth(Config.Settings.Draggable_Width)
     if UI.DragInt("Height", height, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
@@ -83,7 +25,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets the amount of food HMP.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Food = function()
+Config.Widgets.Food = function()
     local height = {[1] = Config.Settings.Food_HMP}
     UI.SetNextItemWidth(Config.Settings.Draggable_Width)
     if UI.DragInt("Food HMP", height, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
@@ -94,7 +36,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles food will be considered in time calculations.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Use_Food = function()
+Config.Widgets.Use_Food = function()
     if UI.Checkbox("Use Food", {Rest.Settings.Config.Use_Food}) then
         Rest.Settings.Config.Use_Food = not Rest.Settings.Config.Use_Food
     end
@@ -103,35 +45,34 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles whether time remaining clock shows.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Show_MP = function()
+Config.Widgets.Show_MP = function()
     if UI.Checkbox("Show MP", {Rest.Settings.Config.Show_MP}) then
         Rest.Settings.Config.Show_MP = not Rest.Settings.Config.Show_MP
     end
 end
 
+------------------------------------------------------------------------------------------------------
+-- Toggles whether time remaining clock shows.
+------------------------------------------------------------------------------------------------------
+Config.Widgets.Show_Countdown = function()
+    if UI.Checkbox("Show Countdown", {Rest.Settings.Config.Show_Countdown}) then
+        Rest.Settings.Config.Show_Countdown = not Rest.Settings.Config.Show_Countdown
+    end
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles whether time remaining clock shows.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Time_Remaining = function()
+Config.Widgets.Time_Remaining = function()
     if UI.Checkbox("Show Time Remaining", {Rest.Settings.Bar.Show_Time_Remaining}) then
         Rest.Settings.Bar.Show_Time_Remaining = not Rest.Settings.Bar.Show_Time_Remaining
     end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles whether remaining MP needed will show.
-------------------------------------------------------------------------------------------------------
-Config.Settings.MP_Needed = function()
-    if UI.Checkbox("Show MP Remaining", {Rest.Settings.Bar.Show_MP_Needed}) then
-        Rest.Settings.Bar.Show_MP_Needed = not Rest.Settings.Bar.Show_MP_Needed
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Toggles whether the next tick gain will show.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Next_Tick = function()
+Config.Widgets.Next_Tick = function()
     if UI.Checkbox("Show Next Tick", {Rest.Settings.Bar.Show_Next_Tick}) then
         Rest.Settings.Bar.Show_Next_Tick = not Rest.Settings.Bar.Show_Next_Tick
     end
@@ -140,7 +81,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles whether the tick breakdown will show.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Breakdown = function()
+Config.Widgets.Breakdown = function()
     if UI.Checkbox("Show Breakdown", {Rest.Settings.Config.Show_Breakdown}) then
         Rest.Settings.Config.Show_Breakdown = not Rest.Settings.Config.Show_Breakdown
     end
@@ -149,7 +90,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles whether the background will show.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Background = function()
+Config.Widgets.Background = function()
     if UI.Checkbox("Show Background", {Rest.Settings.Bar.Show_Background}) then
         Rest.Settings.Bar.Show_Background = not Rest.Settings.Bar.Show_Background
     end
@@ -158,7 +99,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets window scaling.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Window_Scale = function()
+Config.Widgets.Window_Scale = function()
     local window_scale = {[1] = Rest.Settings.Bar.Window_Scaling}
     UI.SetNextItemWidth(Config.Settings.Draggable_Width)
     if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.2f", ImGuiSliderFlags_None) then
@@ -171,7 +112,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Revert settings to defaults.
 ------------------------------------------------------------------------------------------------------
-Config.Settings.Revert = function()
+Config.Widgets.Revert = function()
     local clicked = 0
     if UI.Button("Revert to Default") then
         clicked = 1
@@ -181,15 +122,5 @@ Config.Settings.Revert = function()
             Rest.Settings.Bar.Show_Time_Remaining = Bar.Defaults.Show_Time_Remaining
             Rest.Settings.Bar.Show_Background     = Bar.Defaults.Show_Background
         end
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets the window scaling.
-------------------------------------------------------------------------------------------------------
-Config.Set_Window_Scale = function()
-    if not Config.Scaling_Set then
-        UI.SetWindowFontScale(Rest.Settings.Bar.Window_Scaling)
-        Config.Scaling_Set = true
     end
 end

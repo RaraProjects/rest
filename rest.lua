@@ -27,27 +27,26 @@ addon.author = "Metra"
 addon.name = "Rest"
 addon.version = "06.02.24.00"
 
+-- Horizon approved addon (addonreq-0524)
+
 _Globals = {}
 _Globals.Initialized = false
 
 UI = require("imgui")
 Settings = require("settings")
+
 require("ashita")
 require("timer")
-require("bar")
-require("config")
-require("mp")
+require("Bar._bar")
+require("Config.config")
+require("MP._mp")
+require("ticks")
+require("status")
 
 Rest = T{
-    Is_Resting = false,
-    Duration   = 0,
-    Tick_Time  = nil,
     Total_Time = 0,
-    First_Tick = false,
-    Ticks      = 0,
-    Mod        = 20,
-    MP_Needed  = 0,
     Next_MP    = 0,
+    Settings   = T{},
 }
 
 -- ------------------------------------------------------------------------------------------------------
@@ -59,12 +58,15 @@ ashita.events.register('d3d_present', 'present_cb', function ()
 
         -- Initialize settings from file.
         Rest.Settings = T{
-            Bar = Settings.load(Bar.Defaults, "bar"),
+            Bar    = Settings.load(Bar.Config.Defaults, "bar"),
             Config = Settings.load(Config.Defaults, "config"),
         }
 
+        Bar.Initialize()
+
         _Globals.Initialized = true
     end
+
     MP.Check_Resting_Status()
     Bar.Display()
     Config.Display()
@@ -78,7 +80,7 @@ ashita.events.register('command', 'command_cb', function (e)
     local command_args = e.command:lower():args()
 ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/rest"}, command_args[1]) then
-        Config.Visible = not Config.Visible
+        Config.Visible[1] = not Config.Visible[1]
     end
 end)
 
