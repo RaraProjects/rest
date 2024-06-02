@@ -43,7 +43,7 @@ Bar.Display = function()
             if Rest.Settings.Bar.Show_Time_Remaining then
                 UI.Text(Timer.Format(time_remaining))
                 if Rest.Settings.Bar.Show_Next_Tick then
-                    UI.SameLine() UI.Text(" (+" .. tostring(MP.Next_Tick()) .. ")")
+                    UI.SameLine() UI.Text(" (MP:+" .. tostring(MP.Next_Tick()) .. ")")
                 end
             end
 

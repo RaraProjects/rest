@@ -70,3 +70,24 @@ Config.Set_Window_Scale = function()
         Config.Scaling_Set = true
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles showing the breakdown.
+------------------------------------------------------------------------------------------------------
+Config.Toggle_MP_Breakdown = function()
+    Rest.Settings.Config.Show_Breakdown = not Rest.Settings.Config.Show_Breakdown
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles showing MP.
+------------------------------------------------------------------------------------------------------
+Config.Toggle_MP = function()
+    Rest.Settings.Config.Show_MP = not Rest.Settings.Config.Show_MP
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles showing the timer.
+------------------------------------------------------------------------------------------------------
+Config.Toggle_Timer = function()
+    Rest.Settings.Bar.Show_Time_Remaining = not Rest.Settings.Bar.Show_Time_Remaining
+end
