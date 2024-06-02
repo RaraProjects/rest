@@ -47,13 +47,7 @@ Bar.Display = function()
                 end
             end
 
-            if Rest.Settings.Config.Show_Breakdown then
-                UI.Text("Base     : " .. tostring(MP.Breakdown.Base))
-                UI.Text("Tick     : " .. tostring(MP.Breakdown.Increment))
-                UI.Text("Gear     : " .. tostring(MP.Breakdown.Gear))
-                UI.Text("Cl. Mind : " .. tostring(MP.Breakdown.CM))
-                UI.Text("Food     : " .. tostring(MP.Breakdown.Food))
-            end
+            if Rest.Settings.Config.Show_Breakdown then MP.Tick_Breakdown() end
         end
 
     end

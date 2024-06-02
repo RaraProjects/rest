@@ -162,3 +162,17 @@ MP.Display_MP = function()
     end
     return  header .. tostring(current_mp) .. next_string
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Show the breakdown of the tick.
+-- ------------------------------------------------------------------------------------------------------
+MP.Tick_Breakdown = function()
+    local tick_bonus = " (" .. tostring(MP.Clear_Mind.Inc_HMP()) .. "*" .. tostring(Ticks.Get_Current_Tick()) .. ")"
+    local cm_rank = MP.Clear_Mind.Rank()
+
+    UI.Text("Base HMP   : " .. tostring(MP.Breakdown.Base))
+    UI.Text("Tick Bonus : " .. tostring(MP.Breakdown.Increment) .. tick_bonus)
+    UI.Text("Clear Mind : " .. tostring(MP.Breakdown.CM) .. " (" .. MP.Clear_Mind.Display_Rank(cm_rank) .. ")")
+    UI.Text("Gear Bonus : " .. tostring(MP.Breakdown.Gear))
+    UI.Text("Food Bonus : " .. tostring(MP.Breakdown.Food))
+end

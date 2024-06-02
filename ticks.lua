@@ -72,6 +72,20 @@ Ticks.Get_Current_Tick = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- NOT USED YET
+-- If you loaded Rest mid-rest or were getting ticks while weakened then you won't know what tick your on.
+-- This function calculates what your current tick is.
+-- ------------------------------------------------------------------------------------------------------
+---@param mp_gained integer
+-- ------------------------------------------------------------------------------------------------------
+Ticks.Backfill = function(mp_gained)
+    local base = MP.Breakdown.Base + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
+    local diff = mp_gained - base   -- Get the incremental tick amount.
+    local inc = MP.Clear_Mind.Inc_HMP()
+    local tick = math.floor(diff / inc)
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Returns the elapsed time of the current tick.
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer

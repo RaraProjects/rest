@@ -28,6 +28,18 @@ MP.Clear_Mind.Rank = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Turns a clear mind rank into a display string for the breakdown.
+-- ------------------------------------------------------------------------------------------------------
+---@param rank integer
+---@return string
+-- ------------------------------------------------------------------------------------------------------
+MP.Clear_Mind.Display_Rank = function(rank)
+    if not rank then return "None" end
+    if Clear_Mind.Numerals[rank] then return Clear_Mind.Numerals[rank] end
+    return "None"
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Take the clear mind rank and translate that into additional MP gained per tick.
 -- ------------------------------------------------------------------------------------------------------
 MP.Clear_Mind.MP = function()
