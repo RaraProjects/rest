@@ -68,7 +68,7 @@ MP.Remaining = function()
     local difference = max_mp - curr_mp
 
     if difference ~= Rest.MP_Needed then
-        if (Rest.MP_Needed - difference) > MP.Enum.BASE_HMP then   -- Resting Tick
+        if (Rest.MP_Needed - difference) > MP.Enum.BASE_HMP then   -- Resting Tick if the difference isn't just 2, 3, or 4.
             Rest.Tick_Time = os.time()
             Rest.Duration = 0
             Rest.Ticks = Rest.Ticks + 1
