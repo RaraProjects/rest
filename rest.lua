@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "06.03.24.00"
+addon.version = "06.03.24.01"
 
 -- Horizon approved addon (addonreq-0524)
 
@@ -35,19 +35,16 @@ _Globals.Initialized = false
 UI = require("imgui")
 Settings = require("settings")
 
-require("ashita")
+require("ashita._ashita")
 require("timer")
+require("resources._resources")
 require("Bar._bar")
 require("Config.config")
 require("MP._mp")
 require("ticks")
 require("status")
 
-Rest = T{
-    Total_Time = 0,
-    Next_MP    = 0,
-    Settings   = T{},
-}
+Rest = T{}
 
 -- ------------------------------------------------------------------------------------------------------
 -- Catch the screen rendering packet.
@@ -57,8 +54,9 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         if not Ashita.Is_Logged_In() then return nil end
 
         -- Initialize settings from file.
-        Rest.Settings = T{
+        Rest = T{
             Bar    = Settings.load(Bar.Config.Defaults, "bar"),
+            MP     = Settings.load(MP.Config.Defaults, "mp"),
             Config = Settings.load(Config.Defaults, "config"),
         }
 
@@ -80,16 +78,16 @@ ashita.events.register('command', 'command_cb', function (e)
     local command_args = e.command:lower():args()
     local arg = command_args[2]
 
----@diagnostic disable-next-line: undefined-field
+    ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/rest"}, command_args[1]) then
         if not arg then
             Config.Visible[1] = not Config.Visible[1]
         elseif arg == "breakdown" or arg == "b" then
-            Config.Toggle_MP_Breakdown()
+            MP.Config.Toggle_MP_Breakdown()
         elseif arg == "mp" then
-            Config.Toggle_MP()
+            MP.Config.Toggle_MP()
         elseif arg == "timer" or arg == "t" then
-            Config.Toggle_Timer()
+            Bar.Config.Toggle_Timer()
         end
     end
 
@@ -114,4 +112,33 @@ end)
 ashita.events.register('unload', 'unload_cb', function ()
     Settings.save("bar")
     Settings.save("config")
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Subscribes to incoming packets.
+-- Party info doesn't seem to update right away with 0xC8 (200) and 0xDD (221) so can't update party directly from those.
+-- https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
+------------------------------------------------------------------------------------------------------
+ashita.events.register('packet_in', 'packet_in_cb', function(packet)
+    if not _Globals.Initialized then return nil end
+    -- Action Packet
+    if packet.id == 0x028 then
+
+        local action = Ashita.Packets.Build_Action(packet.data)
+        if not action then return nil end
+
+        local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
+        if not actor_mob then return nil end
+        if not Ashita.Mob.Is_Me(actor_mob.id) then return nil end
+
+        -- Use Item
+        if (action.category ==  5) then
+            local item_id = action.param
+            local hmp = Res.Food_HMP(item_id)
+            if hmp > 0 then
+                MP.Food.Set_HMP(hmp)
+                MP.Food.Set_Name(Res.Food_Name(item_id))
+            end
+        end
+    end
 end)

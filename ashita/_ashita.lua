@@ -2,15 +2,18 @@ Ashita = T{}
 
 Ashita.Enum = T{}
 Ashita.Enum.Status = T{
-    RESTING = 33
+    RESTING = 33,
 }
 
 Ashita.States = T{
-    Zoning = false
+    Zoning = false,
+    Food = false,
 }
 
-Ashita.Slots = require("resources.slots")
-Ashita.Jobs  = require("resources.jobs")
+Ashita.Slots = require("ashita.slots")
+Ashita.Jobs  = require("ashita.jobs")
+require("ashita.mob")
+require("ashita.packets")
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks whether a player is currently resting or not.
@@ -125,4 +128,18 @@ Ashita.Equipment = function(slot)
         return equipment_entry.Item.Id
     end
     return 0
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks if the player has the food buff or not.
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Has_Food = function()
+    local player = AshitaCore:GetMemoryManager():GetPlayer()
+    if not player then return nil end
+    local food_buff = 251
+    local buffs = player:GetBuffs()
+    for _, buff_id in pairs(buffs) do
+        if buff_id == food_buff then return true end
+    end
+    return false
 end

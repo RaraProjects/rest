@@ -1,10 +1,11 @@
 MP = T{}
 
-require("resources.hmp_items")
-require("resources.clear_mind")
 require("MP.enum")
 require("MP.clear_mind")
 require("MP.equipment")
+require("MP.food")
+require("MP.config")
+require("MP.widgets")
 require("MP.util")
 
 MP.Breakdown = T{
@@ -83,7 +84,7 @@ MP.Time_To_Full = function(mp_needed)
                     - MP.Clear_Mind.Inc_HMP() * ticks
                     - MP.Equipment.MP()
                     - MP.Clear_Mind.MP()
-                    - Config.Settings.Food_HMP
+                    - MP.Food.Get_HMP()
     end
 
     MP.TTF = total_time
@@ -99,7 +100,7 @@ MP.Next_Tick = function()
     MP.Breakdown.Increment = (MP.Clear_Mind.Inc_HMP() * Ticks.Get_Current_Tick()) or 0
     MP.Breakdown.Gear = MP.Equipment.MP() or 0
     MP.Breakdown.CM = MP.Clear_Mind.MP() or 0
-    MP.Breakdown.Food = Config.Settings.Food_HMP or 0
+    MP.Breakdown.Food = MP.Food.Get_HMP() or 0
 
     local tick_amount = MP.Breakdown.Base + MP.Breakdown.Increment + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
     MP.Next = Ashita.Current_MP() + tick_amount
@@ -174,5 +175,5 @@ MP.Tick_Breakdown = function()
     UI.Text("Tick Bonus : " .. tostring(MP.Breakdown.Increment) .. tick_bonus)
     UI.Text("Clear Mind : " .. tostring(MP.Breakdown.CM) .. " (" .. MP.Clear_Mind.Display_Rank(cm_rank) .. ")")
     UI.Text("Gear Bonus : " .. tostring(MP.Breakdown.Gear))
-    UI.Text("Food Bonus : " .. tostring(MP.Breakdown.Food))
+    UI.Text("Food Bonus : " .. tostring(MP.Breakdown.Food) .. " (" .. MP.Food.Get_Name() .. ")")
 end

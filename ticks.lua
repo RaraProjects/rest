@@ -101,8 +101,8 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ticks.Get_Countdown = function()
     local ret_value = ""
-    if Rest.Settings.Config.Show_Countdown then
-        if Status.Is_Resting() and Rest.Settings.Bar.Height >= 20 then
+    if Rest.Config.Show_Countdown then
+        if Status.Is_Resting() and Rest.Bar.Height >= 20 then
             local countdown = Ticks.Mod - Ticks.Duration
             if countdown < 0 then countdown = 0 end
             ret_value = tostring(countdown)

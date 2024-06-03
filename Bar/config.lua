@@ -12,11 +12,32 @@ Bar.Config.Defaults = T{
 }
 
 ------------------------------------------------------------------------------------------------------
+-- Populates the bar settings in the settings window.
+------------------------------------------------------------------------------------------------------
+Bar.Config.Populate = function()
+    if UI.BeginTabItem("GUI") then
+        Bar.Widgets.Background()
+        UI.Separator()
+        Bar.Widgets.Width()
+        Bar.Widgets.Height()
+        Bar.Widgets.Window_Scale()
+        UI.EndTabItem()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Sets the window scaling.
 ------------------------------------------------------------------------------------------------------
 Bar.Config.Set_Window_Scale = function()
     if not Bar.Scaling_Set then
-        UI.SetWindowFontScale(Rest.Settings.Bar.Window_Scaling)
+        UI.SetWindowFontScale(Rest.Bar.Window_Scaling)
         Bar.Scaling_Set = true
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles showing the timer.
+------------------------------------------------------------------------------------------------------
+Bar.Config.Toggle_Timer = function()
+    Rest.Bar.Show_Time_Remaining = not Rest.Bar.Show_Time_Remaining
 end
