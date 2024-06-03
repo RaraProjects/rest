@@ -5,7 +5,6 @@ require("MP.clear_mind")
 require("MP.equipment")
 require("MP.food")
 require("MP.config")
-require("MP.widgets")
 require("MP.util")
 
 MP.Breakdown = T{
@@ -176,4 +175,22 @@ MP.Tick_Breakdown = function()
     UI.Text("Clear Mind : " .. tostring(MP.Breakdown.CM) .. " (" .. MP.Clear_Mind.Display_Rank(cm_rank) .. ")")
     UI.Text("Gear Bonus : " .. tostring(MP.Breakdown.Gear))
     UI.Text("Food Bonus : " .. tostring(MP.Breakdown.Food) .. " (" .. MP.Food.Get_Name() .. ")")
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows the MP line from under the bar.
+-- ------------------------------------------------------------------------------------------------------
+MP.Bar_MP_Line = function()
+    local time_remaining = MP.Get_Time_To_Full() - Ticks.Get_Duration()
+    if time_remaining < 0 then time_remaining = 0 end
+    local ttf = MP.Config.Show_Time_To_Full()
+    local next_tick = MP.Config.Show_Next_Tick()
+
+    if ttf then UI.Text("Full MP: " .. Timer.Format(time_remaining)) end
+    if next_tick then
+        if ttf then UI.SameLine() UI.Text(" ") UI.SameLine() end
+        UI.Text("Next: MP+" .. tostring(MP.Next_Tick()))
+    end
+
+    if MP.Config.Show_Breakdown() then MP.Tick_Breakdown() end
 end

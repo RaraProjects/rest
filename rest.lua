@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "06.03.24.02"
+addon.version = "06.03.24.03"
 
 -- Horizon approved addon (addonreq-0524)
 
@@ -38,9 +38,9 @@ Settings = require("settings")
 require("ashita._ashita")
 require("timer")
 require("resources._resources")
-require("Bar._bar")
-require("Config.config")
-require("MP._mp")
+require("bar._bar")
+require("config.config")
+require("mp._mp")
 require("ticks")
 require("status")
 
