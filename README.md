@@ -6,7 +6,7 @@ There are two seconds remaining in the resting tick._<br>
 
 ## Features
 1. Provides a progress bar that can be used to see how far along in a resting tick you are.
-2. Takes into account Clear Mind*, HMP gear, and HMP food.
+2. Takes into account Clear Mind*, HMP gear, and HMP food. You can see each value after enabling the breakdown option.
 3. Tuned to Horizon's HMP values.
 4. Can show estimated time to full MP, next MP value, and next tick value.
 5. Shows you what HMP food you have active.
