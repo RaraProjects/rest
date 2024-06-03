@@ -10,9 +10,6 @@ Config.Window_Flags = bit.bor(
 Config.Defaults = T{
     X_Pos = 100,
     Y_Pos = 100,
-    Show_Breakdown = false,
-    Show_MP = true,
-    Show_Countdown = true,
 }
 
 Config.Settings = T{}
@@ -48,6 +45,13 @@ Config.Revert = function()
         Config.Widgets.Revert()
         UI.EndTabItem()
     end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Toggles settings window visibility.
+-- ------------------------------------------------------------------------------------------------------
+Config.Toggle_Visible = function()
+    Config.Visible[1] = not Config.Visible[1]
 end
 
 ------------------------------------------------------------------------------------------------------

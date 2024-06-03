@@ -10,7 +10,7 @@ Config.Widgets.Revert = function()
         if clicked and 1 then
             Rest.Bar.Width  = Bar.Defaults.Width
             Rest.Bar.Height = Bar.Defaults.Height
-            Rest.Bar.Show_Time_Remaining = Bar.Defaults.Show_Time_Remaining
+            Rest.MP.Show_Time_To_Full = Bar.MP.Show_Time_Remaining
             Rest.Bar.Show_Background     = Bar.Defaults.Show_Background
         end
     end

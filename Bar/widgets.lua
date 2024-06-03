@@ -50,16 +50,16 @@ end
 -- Toggles whether time remaining clock shows.
 ------------------------------------------------------------------------------------------------------
 Bar.Widgets.Show_Countdown = function()
-    if UI.Checkbox("Show Countdown", {Rest.Config.Show_Countdown}) then
-        Rest.Config.Show_Countdown = not Rest.Config.Show_Countdown
+    if UI.Checkbox("Show Countdown", {Rest.Bar.Show_Countdown}) then
+        Rest.Bar.Show_Countdown = not Rest.Bar.Show_Countdown
     end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles whether time remaining clock shows.
+-- Toggles whether the active food shows.
 ------------------------------------------------------------------------------------------------------
-Bar.Widgets.Time_Remaining = function()
-    if UI.Checkbox("Show Time Remaining", {Rest.Bar.Show_Time_Remaining}) then
-        Rest.Bar.Show_Time_Remaining = not Rest.Bar.Show_Time_Remaining
+Bar.Widgets.Show_Food = function()
+    if UI.Checkbox("Show Food", {Rest.Bar.Show_Food}) then
+        Rest.Bar.Show_Food = not Rest.Bar.Show_Food
     end
 end

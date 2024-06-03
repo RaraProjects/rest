@@ -27,7 +27,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Bar.Display = function()
     local flags = Bar.Flags.No_Background
-    if Rest.Bar.Show_Background then flags = Bar.Flags.Background end
+    if Bar.Config.Show_Background() then flags = Bar.Flags.Background end
 
     UI.SetNextWindowSize({Rest.Bar.Width, -1}, ImGuiCond_Always)
     if UI.Begin("Rest", true, flags) then
@@ -35,22 +35,30 @@ Bar.Display = function()
         Bar.Config.Set_Window_Scale()
 
         if MP.Config.Show_MP() then UI.Text(MP.Display_MP()) end
+        if Bar.Config.Show_Food() then UI.Text(Bar.Food()) end
         UI.ProgressBar(Ticks.Progress(), {-1, Rest.Bar.Height}, Ticks.Get_Countdown())
 
         if Status.Is_Resting() then
             local time_remaining = MP.Get_Time_To_Full() - Ticks.Get_Duration()
             if time_remaining < 0 then time_remaining = 0 end
 
-            if Rest.Bar.Show_Time_Remaining then
-                UI.Text(Timer.Format(time_remaining))
-                if Rest.Bar.Show_Next_Tick then
-                    UI.SameLine() UI.Text(" (MP+" .. tostring(MP.Next_Tick()) .. ")")
+            if MP.Config.Show_Time_To_Full() then
+                UI.Text("Full MP: " .. Timer.Format(time_remaining))
+                if MP.Config.Show_Next_Tick() then
+                    UI.SameLine() UI.Text(" Next: MP+" .. tostring(MP.Next_Tick()))
                 end
             end
 
-            if Rest.Config.Show_Breakdown then MP.Tick_Breakdown() end
+            if MP.Config.Show_Breakdown() then MP.Tick_Breakdown() end
         end
 
     end
     UI.End()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the active food.
+-- ------------------------------------------------------------------------------------------------------
+Bar.Food = function()
+    return "HMP Food: " .. MP.Food.Get_Name()
 end

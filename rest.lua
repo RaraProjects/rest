@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "06.03.24.01"
+addon.version = "06.03.24.02"
 
 -- Horizon approved addon (addonreq-0524)
 
@@ -81,13 +81,13 @@ ashita.events.register('command', 'command_cb', function (e)
     ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/rest"}, command_args[1]) then
         if not arg then
-            Config.Visible[1] = not Config.Visible[1]
+            Config.Toggle_Visible()
         elseif arg == "breakdown" or arg == "b" then
             MP.Config.Toggle_MP_Breakdown()
         elseif arg == "mp" then
             MP.Config.Toggle_MP()
         elseif arg == "timer" or arg == "t" then
-            Bar.Config.Toggle_Timer()
+            MP.Config.Toggle_Time_To_Full()
         end
     end
 

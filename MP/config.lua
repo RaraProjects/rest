@@ -3,7 +3,8 @@ MP.Config = T{}
 MP.Config.Defaults = T{
     Show_Breakdown = false,
     Show_MP = true,
-    Show_Countdown = true,
+    Show_Next_Tick = true,
+    Show_Time_To_Full = true,
 }
 
 ------------------------------------------------------------------------------------------------------
@@ -12,8 +13,7 @@ MP.Config.Defaults = T{
 MP.Config.Populate = function()
     if UI.BeginTabItem("MP") then
         MP.Widgets.Show_MP()
-        Bar.Widgets.Time_Remaining()
-        Bar.Widgets.Show_Countdown()
+        MP.Widgets.Time_Remaining()
         MP.Widgets.Next_Tick()
         MP.Widgets.Breakdown()
         UI.EndTabItem()
@@ -35,8 +35,36 @@ MP.Config.Toggle_MP = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Toggles showing the timer.
+------------------------------------------------------------------------------------------------------
+MP.Config.Toggle_Time_To_Full = function()
+    Rest.MP.Show_Time_To_Full = not Rest.MP.Show_Time_To_Full
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles showing the timer for MP.
+------------------------------------------------------------------------------------------------------
+MP.Config.Show_Time_To_Full = function()
+    return Rest.MP.Show_Time_To_Full
+end
+
+------------------------------------------------------------------------------------------------------
 -- Retrieves the show MP setting.
 ------------------------------------------------------------------------------------------------------
 MP.Config.Show_MP = function()
     return Rest.MP.Show_MP
+end
+
+------------------------------------------------------------------------------------------------------
+-- Retrieves the show show next tick setting.
+------------------------------------------------------------------------------------------------------
+MP.Config.Show_Breakdown = function()
+    return Rest.MP.Show_Breakdown
+end
+
+------------------------------------------------------------------------------------------------------
+-- Retrieves the show show next tick setting.
+------------------------------------------------------------------------------------------------------
+MP.Config.Show_Next_Tick = function()
+    return Rest.MP.Show_Next_Tick
 end

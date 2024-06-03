@@ -5,9 +5,9 @@ Bar.Config.Defaults = T{
     Height = 20,
     X_Pos  = 100,
     Y_Pos  = 100,
-    Show_Time_Remaining = true,
-    Show_Next_Tick = true,
+    Show_Countdown = true,
     Show_Background = false,
+    Show_Food = true,
     Window_Scaling = 1,
 }
 
@@ -16,6 +16,8 @@ Bar.Config.Defaults = T{
 ------------------------------------------------------------------------------------------------------
 Bar.Config.Populate = function()
     if UI.BeginTabItem("GUI") then
+        Bar.Widgets.Show_Food()
+        Bar.Widgets.Show_Countdown()
         Bar.Widgets.Background()
         UI.Separator()
         Bar.Widgets.Width()
@@ -36,8 +38,22 @@ Bar.Config.Set_Window_Scale = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles showing the timer.
+-- Returns the bar tick countdown timer setting.
 ------------------------------------------------------------------------------------------------------
-Bar.Config.Toggle_Timer = function()
-    Rest.Bar.Show_Time_Remaining = not Rest.Bar.Show_Time_Remaining
+Bar.Config.Show_Countdown = function()
+    return Rest.Bar.Show_Countdown
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the show background setting.
+------------------------------------------------------------------------------------------------------
+Bar.Config.Show_Background = function()
+    return Rest.Bar.Show_Background
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the show food setting.
+------------------------------------------------------------------------------------------------------
+Bar.Config.Show_Food = function()
+    return Rest.Bar.Show_Food
 end
