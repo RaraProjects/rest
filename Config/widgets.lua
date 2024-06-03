@@ -102,7 +102,9 @@ end
 Config.Widgets.Window_Scale = function()
     local window_scale = {[1] = Rest.Settings.Bar.Window_Scaling}
     UI.SetNextItemWidth(Config.Settings.Draggable_Width)
-    if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.2f", ImGuiSliderFlags_None) then
+    if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.7, 3, "%.2f", ImGuiSliderFlags_None) then
+        if window_scale[1] < 0.7 then window_scale[1] = 0.7
+        elseif window_scale[1] > 3 then window_scale[1] = 3 end
         Rest.Settings.Bar.Window_Scaling = window_scale[1]
         Bar.Scaling_Set = false
         Config.Scaling_Set = false
