@@ -32,10 +32,11 @@ Bar.Display = function()
         if MP.Config.Show_MP() then UI.Text(MP.Display_MP()) end
         UI.ProgressBar(Ticks.Progress(), {-1, Rest.Bar.Height}, Ticks.Get_Countdown())
 
-        -- Used the same blue that petinfo uses for mana.
-        UI.PushStyleColor(ImGuiCol_PlotHistogram, {0.0, 0.50, 1.0, 1.0})
-        UI.ProgressBar(MP.Progress(), {-1, Rest.Bar.Height})
-        UI.PopStyleColor(1)
+        if MP.Config.Show_Time_To_Full_Bar() then
+            UI.PushStyleColor(ImGuiCol_PlotHistogram, {0.0, 0.50, 1.0, 1.0})
+            UI.ProgressBar(MP.Progress(), {-1, Rest.Bar.Height}, MP.Progress_Label())
+            UI.PopStyleColor(1)
+        end
 
         if Status.Is_Resting() then MP.Bar_MP_Line() end
     end

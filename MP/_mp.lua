@@ -207,3 +207,13 @@ MP.Progress = function()
     if MP.TTF_Max == 0 then return 0 end
     return 1 - ((MP.Get_Time_To_Full() - Ticks.Get_Duration()) / MP.TTF_Max)
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles the label that shows on the MP time to full bar.
+-- ------------------------------------------------------------------------------------------------------
+---@return string|nil
+-- ------------------------------------------------------------------------------------------------------
+MP.Progress_Label = function()
+    if MP.Needed == 0 then return "MP Full" end
+    return nil
+end

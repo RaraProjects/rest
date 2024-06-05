@@ -7,6 +7,7 @@ MP.Config.Defaults = T{
     Show_MP = true,
     Show_Next_Tick = true,
     Show_Time_To_Full = true,
+    Show_Time_To_Full_Bar = true,
 }
 
 ------------------------------------------------------------------------------------------------------
@@ -16,6 +17,7 @@ MP.Config.Populate = function()
     if UI.BeginTabItem("MP") then
         MP.Widgets.Show_MP()
         MP.Widgets.Time_Remaining()
+        MP.Widgets.Time_To_Full_Bar()
         MP.Widgets.Next_Tick()
         MP.Widgets.Breakdown()
         UI.EndTabItem()
@@ -44,10 +46,17 @@ MP.Config.Toggle_Time_To_Full = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles showing the timer for MP.
+-- Retrieves the setting for showing the timer for MP.
 ------------------------------------------------------------------------------------------------------
 MP.Config.Show_Time_To_Full = function()
     return Rest.MP.Show_Time_To_Full
+end
+
+------------------------------------------------------------------------------------------------------
+-- Retrieves the setting for showing the time to full bar for MP.
+------------------------------------------------------------------------------------------------------
+MP.Config.Show_Time_To_Full_Bar = function()
+    return Rest.MP.Show_Time_To_Full_Bar
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -104,5 +113,14 @@ end
 MP.Widgets.Time_Remaining = function()
     if UI.Checkbox("Show Time To Full", {Rest.MP.Show_Time_To_Full}) then
         Rest.MP.Show_Time_To_Full = not Rest.MP.Show_Time_To_Full
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles whether the time to full bar shows.
+------------------------------------------------------------------------------------------------------
+MP.Widgets.Time_To_Full_Bar = function()
+    if UI.Checkbox("Show Time To Full Bar", {Rest.MP.Show_Time_To_Full_Bar}) then
+        Rest.MP.Show_Time_To_Full_Bar = not Rest.MP.Show_Time_To_Full_Bar
     end
 end
