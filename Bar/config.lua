@@ -1,11 +1,13 @@
 Bar.Config  = T{}
 Bar.Widgets = T{}
 
+Bar.Config.ALIAS = "bar"
 Bar.Config.Defaults = T{
     Width  = 305,
     Height = 20,
     X_Pos  = 100,
     Y_Pos  = 100,
+    Position_Locked = false,
     Show_Countdown = true,
     Show_Background = false,
     Show_Food = true,
@@ -20,6 +22,7 @@ Bar.Config.Populate = function()
         Bar.Widgets.Show_Food()
         Bar.Widgets.Show_Countdown()
         Bar.Widgets.Background()
+        Bar.Widgets.Lock_Position()
         UI.Separator()
         Bar.Widgets.Width()
         Bar.Widgets.Height()
@@ -93,6 +96,15 @@ Bar.Widgets.Window_Scale = function()
         Rest.Bar.Window_Scaling = window_scale[1]
         Bar.Scaling_Set = false
         Config.Scaling_Set = false
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles whether the background will show.
+------------------------------------------------------------------------------------------------------
+Bar.Widgets.Lock_Position = function()
+    if UI.Checkbox("Lock Position", {Rest.Bar.Position_Locked}) then
+        Rest.Bar.Position_Locked = not Rest.Bar.Position_Locked
     end
 end
 

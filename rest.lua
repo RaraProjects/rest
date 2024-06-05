@@ -25,8 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "06.03.24.03"
-
+addon.version = "06.04.24.00"
 -- Horizon approved addon (addonreq-0524)
 
 _Globals = {}
@@ -43,6 +42,8 @@ require("config.config")
 require("mp._mp")
 require("ticks")
 require("status")
+require("commands")
+require("intialization")
 
 Rest = T{}
 
@@ -50,47 +51,11 @@ Rest = T{}
 -- Catch the screen rendering packet.
 -- ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
-    if not _Globals.Initialized then
-        if not Ashita.Is_Logged_In() then return nil end
-
-        -- Initialize settings from file.
-        Rest = T{
-            Bar    = Settings.load(Bar.Config.Defaults, "bar"),
-            MP     = Settings.load(MP.Config.Defaults, "mp"),
-            Config = Settings.load(Config.Defaults, "config"),
-        }
-
-        Bar.Initialize()
-
-        _Globals.Initialized = true
-    end
-
+    if not _Globals.Initialized then return nil end
+    if not Ashita.Is_Logged_In() then return nil end
     MP.Check_Resting_Status()
     Bar.Display()
     Config.Display()
-end)
-
-------------------------------------------------------------------------------------------------------
--- Subscribe to addon commands.
--- Influenced by HXUI: https://github.com/tirem/HXUI
-------------------------------------------------------------------------------------------------------
-ashita.events.register('command', 'command_cb', function (e)
-    local command_args = e.command:lower():args()
-    local arg = command_args[2]
-
-    ---@diagnostic disable-next-line: undefined-field
-    if table.contains({"/rest"}, command_args[1]) then
-        if not arg then
-            Config.Toggle_Visible()
-        elseif arg == "breakdown" or arg == "b" then
-            MP.Config.Toggle_MP_Breakdown()
-        elseif arg == "mp" then
-            MP.Config.Toggle_MP()
-        elseif arg == "timer" or arg == "t" then
-            MP.Config.Toggle_Time_To_Full()
-        end
-    end
-
 end)
 
 ------------------------------------------------------------------------------------------------------
@@ -104,14 +69,6 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0xA then    -- End Zone
         Ashita.Is_Zoning(false)
     end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Save settings when the addon is unloaded.
-------------------------------------------------------------------------------------------------------
-ashita.events.register('unload', 'unload_cb', function ()
-    Settings.save("bar")
-    Settings.save("config")
 end)
 
 ------------------------------------------------------------------------------------------------------

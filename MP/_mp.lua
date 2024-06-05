@@ -16,9 +16,10 @@ MP.Breakdown = T{
     Food = 0,
 }
 
-MP.Needed = 0   -- Missing MP
-MP.TTF = 0      -- Time to Full
-MP.Next = 0     -- How much MP we will have after the next tick
+MP.Needed = 0       -- Missing MP
+MP.TTF = 0          -- Current Time to Full
+MP.Next = 0         -- How much MP we will have after the next tick
+MP.TTF_Max = 0      -- Used for the denominator in the MP progress bar.
 
 -- Horizon HMP Documentation
 -- https://horizonffxi.wiki/MP_Recovered_While_Healing
@@ -35,6 +36,7 @@ MP.Check_Resting_Status = function()
         Status.Rest_Start()
     elseif not Ashita.Is_Resting() and Status.Is_Resting() then
         Status.Rest_End()
+        MP.TTF_Max = 0
     elseif Status.Is_Resting() then
         Status.Rest_Active()
     end
@@ -87,6 +89,7 @@ MP.Time_To_Full = function(mp_needed)
     end
 
     MP.TTF = total_time
+    if MP.TTF_Max == 0 then MP.TTF_Max = total_time end
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -193,4 +196,14 @@ MP.Bar_MP_Line = function()
     end
 
     if MP.Config.Show_Breakdown() then MP.Tick_Breakdown() end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows the MP line from under the bar.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+MP.Progress = function()
+    if MP.TTF_Max == 0 then return 0 end
+    return 1 - ((MP.Get_Time_To_Full() - Ticks.Get_Duration()) / MP.TTF_Max)
 end

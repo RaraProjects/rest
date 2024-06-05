@@ -1,34 +1,29 @@
 Bar = T{}
 
-Bar.Flags = T{}
-Bar.Flags.Background = bit.bor(ImGuiWindowFlags_NoDecoration, ImGuiWindowFlags_AlwaysAutoResize,
+Bar.Window_Flags = bit.bor(ImGuiWindowFlags_NoDecoration, ImGuiWindowFlags_AlwaysAutoResize,
 ImGuiWindowFlags_NoSavedSettings, ImGuiWindowFlags_NoFocusOnAppearing,
 ImGuiWindowFlags_NoNav)
 
-Bar.Flags.No_Background = bit.bor(ImGuiWindowFlags_NoDecoration, ImGuiWindowFlags_AlwaysAutoResize,
-ImGuiWindowFlags_NoSavedSettings, ImGuiWindowFlags_NoFocusOnAppearing,
-ImGuiWindowFlags_NoNav, ImGuiWindowFlags_NoBackground)
-
 Bar.Scaling_Set = false
+Bar.Reset_Position = true
 
 require("Bar.config")
-
-------------------------------------------------------------------------------------------------------
--- Initialize the window position.
-------------------------------------------------------------------------------------------------------
-Bar.Initialize = function()
-    UI.SetNextWindowPos({Rest.Bar.X_Pos, Rest.Bar.Y_Pos}, ImGuiCond_Always)
-    Bar.Display()
-end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Draws the resting progress bar.
 -- ------------------------------------------------------------------------------------------------------
 Bar.Display = function()
-    local flags = Bar.Flags.No_Background
-    if Bar.Config.Show_Background() then flags = Bar.Flags.Background end
+    local flags = Bar.Window_Flags
+    if Rest.Bar.Position_Locked then flags = bit.bor(flags, ImGuiWindowFlags_NoMove) end
+    if not Bar.Config.Show_Background() then flags = bit.bor(flags, ImGuiWindowFlags_NoBackground) end
 
+    -- Handle resetting the window position between characters.
+    if Bar.Reset_Position then
+        UI.SetNextWindowPos({Rest.Bar.X_Pos, Rest.Bar.Y_Pos}, ImGuiCond_Always)
+        Bar.Reset_Position = false
+    end
     UI.SetNextWindowSize({Rest.Bar.Width, -1}, ImGuiCond_Always)
+
     if UI.Begin("Rest", true, flags) then
         Rest.Bar.X_Pos, Rest.Bar.Y_Pos = UI.GetWindowPos()
         Bar.Config.Set_Window_Scale()
@@ -36,6 +31,11 @@ Bar.Display = function()
         if Bar.Config.Show_Food() then UI.Text(Bar.Food()) end
         if MP.Config.Show_MP() then UI.Text(MP.Display_MP()) end
         UI.ProgressBar(Ticks.Progress(), {-1, Rest.Bar.Height}, Ticks.Get_Countdown())
+
+        -- Used the same blue that petinfo uses for mana.
+        UI.PushStyleColor(ImGuiCol_PlotHistogram, {0.0, 0.50, 1.0, 1.0})
+        UI.ProgressBar(MP.Progress(), {-1, Rest.Bar.Height})
+        UI.PopStyleColor(1)
 
         if Status.Is_Resting() then MP.Bar_MP_Line() end
     end

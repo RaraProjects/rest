@@ -5,9 +5,9 @@ Config.Visible = {false}
 Config.Window_Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
     ImGuiWindowFlags_NoFocusOnAppearing,
-    ImGuiWindowFlags_NoNav,
-    ImGuiWindowFlags_NoTitleBar)
+    ImGuiWindowFlags_NoNav)
 
+Config.ALIAS = "config"
 Config.Defaults = T{
     X_Pos = 100,
     Y_Pos = 100,
@@ -16,13 +16,19 @@ Config.Defaults = T{
 Config.Settings = T{}
 Config.Settings.Draggable_Width = 100
 Config.Settings.Scaling_Set = false
+Config.Reset_Position = true
 
 -- ------------------------------------------------------------------------------------------------------
 -- Populates the configuration window.
 -- ------------------------------------------------------------------------------------------------------
 Config.Display = function()
     if not Ashita.States.Zoning and Config.Visible[1] then
-        if UI.Begin("Settings", Config.Visible, Config.Window_Flags) then
+        -- Handle resetting the window position between characters.
+        if Config.Reset_Position then
+            UI.SetNextWindowPos({Rest.Config.X_Pos, Rest.Config.Y_Pos}, ImGuiCond_Always)
+            Config.Reset_Position = false
+        end
+        if UI.Begin("Rest Settings", Config.Visible, Config.Window_Flags) then
             Rest.Config.X_Pos, Rest.Config.Y_Pos = UI.GetWindowPos()
             Config.Set_Window_Scale()
             if UI.BeginTabBar("Settings Tabs", ImGuiTabBarFlags_None) then

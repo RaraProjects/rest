@@ -1,6 +1,7 @@
 MP.Config  = T{}
 MP.Widgets = T{}
 
+MP.Config.ALIAS = "mp"
 MP.Config.Defaults = T{
     Show_Breakdown = false,
     Show_MP = true,
