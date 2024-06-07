@@ -214,6 +214,6 @@ end
 ---@return string|nil
 -- ------------------------------------------------------------------------------------------------------
 MP.Progress_Label = function()
-    if MP.Needed == 0 then return "MP Full" end
+    if MP.Needed == 0 then return "---" end
     return nil
 end
