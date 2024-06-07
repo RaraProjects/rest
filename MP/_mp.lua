@@ -184,18 +184,21 @@ end
 -- Shows the MP line from under the bar.
 -- ------------------------------------------------------------------------------------------------------
 MP.Bar_MP_Line = function()
+    if MP.Config.Show_Next_Tick() then UI.Text("Next: MP+" .. tostring(MP.Next_Tick())) end
+    if MP.Config.Show_Breakdown() then MP.Tick_Breakdown() end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Show the Time to Full timer.
+-- ------------------------------------------------------------------------------------------------------
+---@return string
+-- ------------------------------------------------------------------------------------------------------
+MP.TTF_Timer = function()
     local time_remaining = MP.Get_Time_To_Full() - Ticks.Get_Duration()
     if time_remaining < 0 then time_remaining = 0 end
-    local ttf = MP.Config.Show_Time_To_Full()
-    local next_tick = MP.Config.Show_Next_Tick()
-
-    if ttf then UI.Text("Full MP: " .. Timer.Format(time_remaining)) end
-    if next_tick then
-        if ttf then UI.SameLine() UI.Text(" ") UI.SameLine() end
-        UI.Text("Next: MP+" .. tostring(MP.Next_Tick()))
-    end
-
-    if MP.Config.Show_Breakdown() then MP.Tick_Breakdown() end
+    local time_string = Timer.Format(time_remaining)
+    if time_remaining == 0 then time_string = "---" end
+    return "MP: " .. time_string
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -206,14 +209,4 @@ end
 MP.Progress = function()
     if MP.TTF_Max == 0 then return 0 end
     return 1 - ((MP.Get_Time_To_Full() - Ticks.Get_Duration()) / MP.TTF_Max)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Handles the label that shows on the MP time to full bar.
--- ------------------------------------------------------------------------------------------------------
----@return string|nil
--- ------------------------------------------------------------------------------------------------------
-MP.Progress_Label = function()
-    if MP.Needed == 0 then return "---" end
-    return nil
 end

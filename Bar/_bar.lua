@@ -34,7 +34,7 @@ Bar.Display = function()
 
         if MP.Config.Show_Time_To_Full_Bar() then
             UI.PushStyleColor(ImGuiCol_PlotHistogram, {0.0, 0.50, 1.0, 1.0})
-            UI.ProgressBar(MP.Progress(), {-1, Rest.Bar.Height}, MP.Progress_Label())
+            UI.ProgressBar(MP.Progress(), {-1, Rest.Bar.Height}, MP.TTF_Timer())
             UI.PopStyleColor(1)
         end
 
