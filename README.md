@@ -1,3 +1,5 @@
+_Horizon approved addon: addonreq-0524_
+
 ## Introduction
 Rest allows you to visually keep track of where you are within your resting cycle.<br><br>
 ![image](https://github.com/RaraProjects/rest/assets/72292212/3e59e5ac-06c3-4f4e-b68d-effef9bed109)<br>
