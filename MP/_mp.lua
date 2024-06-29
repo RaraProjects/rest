@@ -157,7 +157,7 @@ MP.Display_MP = function()
     local header = "MP: "
     local current_mp = Ashita.Current_MP()
     local next_string = ""
-    if Status.Is_Resting() then
+    if Status.Is_Resting() and Rest.MP.Show_Next_Tick then
         local next_mp = MP.Get_Next_MP()
         local max_mp = Ashita.Max_MP()
         local next_mpp = math.ceil((next_mp / max_mp) * 100)
