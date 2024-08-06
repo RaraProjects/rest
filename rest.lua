@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "06.28.24.00"
+addon.version = "07.31.24.00"
 -- Horizon approved addon (addonreq-0524)
 
 _Globals = {}
@@ -52,9 +52,13 @@ Rest = T{}
 -- ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
     if not _Globals.Initialized then return nil end
-    if not Ashita.Is_Logged_In() then return nil end
+    if not Ashita.Is_Logged_In() or Ashita.States.Zoning then return nil end
     MP.Check_Resting_Status()
-    Bar.Display()
+    if Rest.Bar.Auto_Hide then
+        if Status.Is_Resting() then Bar.Display() end
+    else
+        Bar.Display()
+    end
     Config.Display()
 end)
 

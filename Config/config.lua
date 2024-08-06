@@ -84,3 +84,18 @@ Config.Widgets.Revert = function()
         end
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Creates a help text marker.
+------------------------------------------------------------------------------------------------------
+Config.Widgets.HelpMarker = function(text)
+    UI.SameLine()
+    UI.TextDisabled("(?)")
+    if UI.IsItemHovered() then
+        UI.BeginTooltip()
+        UI.PushTextWrapPos(UI.GetFontSize() * 25)
+        UI.TextUnformatted(text)
+        UI.PopTextWrapPos()
+        UI.EndTooltip()
+    end
+end

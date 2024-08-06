@@ -12,6 +12,7 @@ Bar.Config.Defaults = T{
     Show_Background = false,
     Show_Food = true,
     Window_Scaling = 1,
+    Auto_Hide = false,
 }
 
 ------------------------------------------------------------------------------------------------------
@@ -21,6 +22,7 @@ Bar.Config.Populate = function()
     if UI.BeginTabItem("GUI") then
         Bar.Widgets.Show_Food()
         Bar.Widgets.Show_Countdown()
+        Bar.Widgets.Auto_Hide()
         Bar.Widgets.Background()
         Bar.Widgets.Lock_Position()
         UI.Separator()
@@ -115,6 +117,16 @@ Bar.Widgets.Background = function()
     if UI.Checkbox("Show Background", {Rest.Bar.Show_Background}) then
         Rest.Bar.Show_Background = not Rest.Bar.Show_Background
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles whether the rest bar auto hides when not resting.
+------------------------------------------------------------------------------------------------------
+Bar.Widgets.Auto_Hide = function()
+    if UI.Checkbox("Auto Hide", {Rest.Bar.Auto_Hide}) then
+        Rest.Bar.Auto_Hide = not Rest.Bar.Auto_Hide
+    end
+    Config.Widgets.HelpMarker("The rest bar will hide automatically when not resting.")
 end
 
 ------------------------------------------------------------------------------------------------------

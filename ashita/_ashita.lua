@@ -120,6 +120,7 @@ end
 Ashita.Equipment = function(slot)
     local inventory_manager = AshitaCore:GetMemoryManager():GetInventory()
     local item = inventory_manager:GetEquippedItem(slot)
+    if not item then return 0 end
     local index = bit.band(item.Index, 0x00FF)
     local equipment_entry = {}
     if index ~= 0 then
