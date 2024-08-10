@@ -11,6 +11,9 @@ Bar.Reset_Position = true
 -- Draws the resting progress bar.
 -- ------------------------------------------------------------------------------------------------------
 Bar.Display = function()
+    if Ashita.Menu.Hide() then return nil end
+    if Rest.Bar.Auto_Hide and not Status.Is_Resting() then return nil end
+
     local flags = Bar.Window_Flags
     if Rest.Bar.Position_Locked then flags = bit.bor(flags, ImGuiWindowFlags_NoMove) end
     if not Config.Bar.Show_Background() then flags = bit.bor(flags, ImGuiWindowFlags_NoBackground) end

@@ -14,6 +14,7 @@ Ashita.Slots = require("ashita.slots")
 Ashita.Jobs  = require("ashita.jobs")
 require("ashita.mob")
 require("ashita.packets")
+require("ashita.menu")
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks whether a player is currently resting or not.
