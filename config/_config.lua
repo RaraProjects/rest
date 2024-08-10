@@ -36,6 +36,7 @@ Config.Display = function()
             Rest.Config.X_Pos, Rest.Config.Y_Pos = UI.GetWindowPos()
             Config.Set_Window_Scale()
 
+            HPMP.Next_Tick()
             if UI.BeginTabBar("Settings Tabs", ImGuiTabBarFlags_None) then
                 if UI.BeginTabItem("Info") then
                     UI.Text(Food.Get_Name())

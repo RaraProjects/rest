@@ -94,11 +94,8 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         -- Use Item
         if (action.category ==  5) then
             local item_id = action.param
-            local hmp = Res.Food_HMP(item_id)
-            if hmp > 0 then
-                Food.Set_HMP(hmp)
-                Food.Set_Name(Res.Food_Name(item_id))
-            end
+            local stats = Res.Get_Food(item_id)
+            Food.Set_HPMP(item_id, stats)
         end
     end
 end)

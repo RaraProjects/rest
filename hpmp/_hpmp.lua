@@ -41,7 +41,7 @@ HPMP.Time_To_Full = function(hp_needed, mp_needed)
     local equip = Equipment.HPMP()
     if not equip then return nil end
 
-    local food = Food.HPMP()
+    local food = Food.Get_HPMP()
     if not food then return nil end
 
     -- Get HP ticks.
@@ -82,10 +82,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 HPMP.Next_Tick = function()
     local equip = Equipment.HPMP()
-    if not equip then return {} end
+    if not equip then return {hp = 0, mp = 0} end
 
-    local food = Food.HPMP()
-    if not food then return {} end
+    local food = Food.Get_HPMP()
+    if not food then return {hp = 0, mp = 0} end
 
     HP.Breakdown.Base = HPMP.Enum.BASE_HHP
     HP.Breakdown.Increment = (HPMP.Enum.INC_HHP * Ticks.Get_Current_Tick()) or 0
