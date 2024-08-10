@@ -9,17 +9,17 @@ Clear_Mind.Rank = function()
     local sub_job = Ashita.Job(true)
     local sub_job_level = Ashita.Job_Level(true)
     local cm_rank = 0
-    if Clear_Mind[main_job] then
+    if Res.Clear_Mind[main_job] then
         for rank = 6, 1, -1 do
-            local cm_level = Clear_Mind[main_job][rank]
-            if Clear_Mind[main_job][rank] then
+            local cm_level = Res.Clear_Mind[main_job][rank]
+            if Res.Clear_Mind[main_job][rank] then
                 if main_job_level >= cm_level then return rank end
             end
         end
-    elseif Clear_Mind[sub_job] then
+    elseif Res.Clear_Mind[sub_job] then
         for rank = 6, 1, -1 do
-            local cm_level = Clear_Mind[sub_job][rank]
-            if Clear_Mind[sub_job][rank] then
+            local cm_level = Res.Clear_Mind[sub_job][rank]
+            if Res.Clear_Mind[sub_job][rank] then
                 if sub_job_level >= cm_level then return rank end
             end
         end

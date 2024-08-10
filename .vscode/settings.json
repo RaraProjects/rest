@@ -18,6 +18,8 @@
         "ImGuiSliderFlags_None",
         "ImGuiWindowFlags_NoMove",
         "ImGuiCol_PlotHistogram",
-        "ImGuiTableColumnFlags_None"
+        "ImGuiTableColumnFlags_None",
+        "ImGuiTableFlags_PadOuterX",
+        "ImGuiTableFlags_Borders"
     ]
 }

@@ -91,29 +91,39 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Show the breakdown of the tick.
 -- ------------------------------------------------------------------------------------------------------
-MP.Tick_Breakdown = function(col_flags, width)
-    local tick_bonus = " (" .. tostring(Clear_Mind.Inc_HMP()) .. "*" .. tostring(Ticks.Get_Current_Tick()) .. ")"
+MP.Tick_Breakdown = function()
+    local tick_bonus = tostring(Clear_Mind.Inc_HMP()) .. "*" .. tostring(Ticks.Get_Current_Tick())
     local cm_rank = Clear_Mind.Rank()
 
-    UI.Text("MP")
-    if UI.BeginTable("MP Breakdown", 2) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
+    local table_flags = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
+    local col_flags = bit.bor(ImGuiTableColumnFlags_None)
+    local col_width = HPMP.Column_Widths.Element
+
+    if UI.BeginTable("MP Breakdown", 3, table_flags) then
+        UI.TableSetupColumn("MP", col_flags, col_width)
+        UI.TableSetupColumn("Value", col_flags)
+        UI.TableSetupColumn("Note", col_flags)
+        UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Base HMP")
         UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Base))
+        UI.TableNextColumn()
 
         UI.TableNextColumn() UI.Text("Tick Bonus")
-        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Increment) .. tick_bonus)
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Increment))
+        UI.TableNextColumn() UI.Text(tick_bonus)
 
         UI.TableNextColumn() UI.Text("Clear Mind")
-        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.CM) .. " (" .. Clear_Mind.Display_Rank(cm_rank) .. ")")
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.CM))
+        UI.TableNextColumn() UI.Text(Clear_Mind.Display_Rank(cm_rank))
 
         UI.TableNextColumn() UI.Text("Gear Bonus")
         UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Gear))
+        UI.TableNextColumn()
 
         UI.TableNextColumn() UI.Text("Food Bonus")
         UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Food))
+        UI.TableNextColumn()
 
         UI.EndTable()
     end

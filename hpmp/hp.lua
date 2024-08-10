@@ -82,23 +82,34 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Show the breakdown of the tick.
 -- ------------------------------------------------------------------------------------------------------
-HP.Tick_Breakdown = function(col_flags, width)
-    UI.Text("HP")
-    if UI.BeginTable("HP Breakdown", 2) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
+HP.Tick_Breakdown = function()
+    local tick_bonus = tostring(HPMP.Enum.INC_HHP) .. "*" .. tostring(Ticks.Get_Current_Tick())
+
+    local table_flags = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
+    local col_flags = bit.bor(ImGuiTableColumnFlags_None)
+    local col_width = HPMP.Column_Widths.Element
+
+    if UI.BeginTable("HP Breakdown", 3, table_flags) then
+        UI.TableSetupColumn("HP", col_flags, col_width)
+        UI.TableSetupColumn("Value", col_flags)
+        UI.TableSetupColumn("Notes", col_flags)
+        UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Base HHP")
         UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Base))
+        UI.TableNextColumn()
 
         UI.TableNextColumn() UI.Text("Tick Bonus")
-        UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Increment) .. " (" .. tostring(Ticks.Get_Current_Tick()) .. ")")
+        UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Increment))
+        UI.TableNextColumn() UI.Text(tick_bonus)
 
         UI.TableNextColumn() UI.Text("Gear Bonus")
         UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Gear))
+        UI.TableNextColumn()
 
         UI.TableNextColumn() UI.Text("Food Bonus")
         UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Food))
+        UI.TableNextColumn()
 
         UI.EndTable()
     end

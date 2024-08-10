@@ -7,6 +7,10 @@ HPMP.Enum = T{
     INC_HMP  = 4,
 }
 
+HPMP.Column_Widths = T{
+    Element = 100,
+}
+
 require("hpmp.hp")
 require("hpmp.mp")
 

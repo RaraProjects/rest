@@ -38,13 +38,11 @@ Config.Display = function()
 
             if UI.BeginTabBar("Settings Tabs", ImGuiTabBarFlags_None) then
                 if UI.BeginTabItem("Info") then
-                    local col_flags = bit.bor(ImGuiTableColumnFlags_None)
-                    local width = 100
                     UI.Text(Food.Get_Name())
                     UI.Separator()
-                    HP.Tick_Breakdown(col_flags, width)
+                    HP.Tick_Breakdown()
                     UI.Separator()
-                    MP.Tick_Breakdown(col_flags, width)
+                    MP.Tick_Breakdown()
                     UI.EndTabItem()
                 end
                 Config.Bar.Populate()
