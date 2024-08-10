@@ -35,14 +35,16 @@ UI = require("imgui")
 Settings = require("settings")
 
 require("ashita._ashita")
-require("timer")
 require("resources._resources")
-require("bar._bar")
-require("config.config")
-require("mp._mp")
+require("config._config")
+require("hpmp._hpmp")
+require("timer")
+require("bar")
+require("clear_mind")
+require("equipment")
+require("food")
 require("ticks")
 require("status")
-require("commands")
 require("intialization")
 
 Rest = T{}
@@ -53,7 +55,11 @@ Rest = T{}
 ashita.events.register('d3d_present', 'present_cb', function ()
     if not _Globals.Initialized then return nil end
     if not Ashita.Is_Logged_In() or Ashita.States.Zoning then return nil end
-    MP.Check_Resting_Status()
+
+    -- Primary resting loop.
+    Status.Check_Rest()
+
+    -- Handle visuals.
     if Rest.Bar.Auto_Hide then
         if Status.Is_Resting() then Bar.Display() end
     else
@@ -68,9 +74,9 @@ end)
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     if not _Globals.Initialized then return nil end
-    if packet.id == 0xB then        -- Start Zone
+    if packet.id == 0x00B then        -- Start Zone
         Ashita.Is_Zoning(true)
-    elseif packet.id == 0xA then    -- End Zone
+    elseif packet.id == 0x00A then    -- End Zone
         Ashita.Is_Zoning(false)
     end
 end)
@@ -97,9 +103,29 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             local item_id = action.param
             local hmp = Res.Food_HMP(item_id)
             if hmp > 0 then
-                MP.Food.Set_HMP(hmp)
-                MP.Food.Set_Name(Res.Food_Name(item_id))
+                Food.Set_HMP(hmp)
+                Food.Set_Name(Res.Food_Name(item_id))
             end
+        end
+    end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Subscribe to addon commands.
+-- Influenced by HXUI: https://github.com/tirem/HXUI
+------------------------------------------------------------------------------------------------------
+ashita.events.register('command', 'command_cb', function (e)
+    local command_args = e.command:lower():args()
+    local arg = command_args[2]
+
+    ---@diagnostic disable-next-line: undefined-field
+    if table.contains({"/rest"}, command_args[1]) then
+        if not arg then
+            Config.Toggle_Visible()
+        elseif arg == "mp" then
+            Config.MP.Toggle_MP()
+        elseif arg == "timer" or arg == "t" then
+            Config.MP.Toggle_Time_To_Full_Bar()
         end
     end
 end)

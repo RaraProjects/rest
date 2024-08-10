@@ -1,7 +1,7 @@
-Clear_Mind = T{}
+Res.Clear_Mind = T{}
 
 -- https://horizonffxi.wiki/White_Mage
-Clear_Mind.WHM = T{
+Res.Clear_Mind.WHM = T{
     [1] = 15,
     [2] = 35,
     [3] = 45,
@@ -11,7 +11,7 @@ Clear_Mind.WHM = T{
 }
 
 -- https://horizonffxi.wiki/Red_Mage
-Clear_Mind.RDM = T{
+Res.Clear_Mind.RDM = T{
     [1] = 31,
     [2] = 53,
     [3] = 75,
@@ -21,7 +21,7 @@ Clear_Mind.RDM = T{
 }
 
 -- https://horizonffxi.wiki/Summoner
-Clear_Mind.SMN = T{
+Res.Clear_Mind.SMN = T{
     [1] = 15,
     [2] = 30,
     [3] = 45,
@@ -31,7 +31,7 @@ Clear_Mind.SMN = T{
 }
 
 -- https://horizonffxi.wiki/Black_Mage
-Clear_Mind.BLM = T{
+Res.Clear_Mind.BLM = T{
     [1] = 15,
     [2] = 30,
     [3] = 45,
@@ -40,7 +40,7 @@ Clear_Mind.BLM = T{
     [6] = 96,
 }
 
-Clear_Mind.HMP = T{
+Res.Clear_Mind.HMP = T{
     [0] = 0,
     [1] = 3,
     [2] = 6,    -- 42 WHM matched.
@@ -50,7 +50,7 @@ Clear_Mind.HMP = T{
     [6] = 18,
 }
 
-Clear_Mind.Numerals = T{
+Res.Clear_Mind.Numerals = T{
     [0] = "None",
     [1] = "I",
     [2] = "II",

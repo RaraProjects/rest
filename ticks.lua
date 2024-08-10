@@ -12,6 +12,45 @@ Ticks.Mod = Ticks.Enum.FIRST
 Ticks.Duration = 0
 
 -- ------------------------------------------------------------------------------------------------------
+-- Calcualtes how much HP/MP is needed to get to full HP/MP.
+-- Updates how much time it will take to get to full HP/MP.
+-- The progress bar will not be reset for refresh ticks.
+-- ------------------------------------------------------------------------------------------------------
+Ticks.Loop = function()
+    local new_hp_needed = Ashita.Missing_HP()
+    local new_mp_needed = Ashita.Missing_MP()
+
+    -- If our HP or MP needed is different than what we last measured then an update is necessary.
+    -- If we only gained a small amount of MP then it was probably from refresh and shouldn't count as a tick.
+    -- Using elseif here to avoid creating duplicate new ticks.
+    local reset_time = false
+    if new_mp_needed ~= MP.Needed then
+        if (MP.Needed - new_mp_needed) > HPMP.Enum.BASE_HMP then
+            Ticks.New()
+        end
+        reset_time = true
+    elseif new_hp_needed ~= HP.Needed then
+        if (HP.Needed - new_hp_needed) > HPMP.Enum.BASE_HHP then
+            Ticks.New()
+        end
+        reset_time = true
+    -- HP and MP are full. Switch to raw timer based ticks.
+    elseif new_hp_needed == 0 and new_mp_needed == 0 then
+        if not Ticks.First and (Ticks.Duration >= Ticks.Enum.FIRST) then
+            Ticks.New()
+        elseif Ticks.First and (Ticks.Duration >= Ticks.Enum.SUBSEQUENT) then
+            Ticks.New()
+        end
+    end
+
+    -- Sets the HP and MP TTF globals.
+    if reset_time then HPMP.Time_To_Full(new_hp_needed, new_mp_needed) end
+
+    MP.Needed = new_mp_needed
+    HP.Needed = new_hp_needed
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Begin resting.
 -- ------------------------------------------------------------------------------------------------------
 Ticks.Rest_Start = function()
@@ -81,7 +120,7 @@ end
 Ticks.Backfill = function(mp_gained)
     local base = MP.Breakdown.Base + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
     local diff = mp_gained - base   -- Get the incremental tick amount.
-    local inc = MP.Clear_Mind.Inc_HMP()
+    local inc = Clear_Mind.Inc_HMP()
     local tick = math.floor(diff / inc)
 end
 
@@ -101,7 +140,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ticks.Get_Countdown = function()
     local ret_value = ""
-    if Bar.Config.Show_Countdown() then
+    if Config.Bar.Show_Countdown() then
         if Status.Is_Resting() and Rest.Bar.Height >= 20 then
             local countdown = Ticks.Mod - Ticks.Duration
             if countdown < 0 then countdown = 0 end

@@ -1,14 +1,14 @@
 MP = T{}
 
-require("MP.enum")
-require("MP.clear_mind")
-require("MP.equipment")
-require("MP.food")
-require("MP.config")
-require("MP.util")
+-- Horizon HMP Documentation
+-- https://horizonffxi.wiki/MP_Recovered_While_Healing
+-- https://horizonffxi.wiki/Clear_Mind
+
+-- Retail HMP Documentation
+-- https://www.bg-wiki.com/ffxi/Clear_Mind
 
 MP.Breakdown = T{
-    Base = MP.Enum.BASE_HMP,
+    Base = HPMP.Enum.BASE_HMP,
     Increment = 0,
     Bonus = 0,
     Gear = 0,
@@ -21,93 +21,15 @@ MP.TTF = 0          -- Current Time to Full
 MP.Next = 0         -- How much MP we will have after the next tick
 MP.TTF_Max = 0      -- Used for the denominator in the MP progress bar.
 
--- Horizon HMP Documentation
--- https://horizonffxi.wiki/MP_Recovered_While_Healing
--- https://horizonffxi.wiki/Clear_Mind
-
--- Retail HMP Documentation
--- https://www.bg-wiki.com/ffxi/Clear_Mind
-
 -- ------------------------------------------------------------------------------------------------------
--- This is the primary resting loop.
+-- Shows the MP bar.
 -- ------------------------------------------------------------------------------------------------------
-MP.Check_Resting_Status = function()
-    if Ashita.Is_Resting() and not Status.Is_Resting() then
-        Status.Rest_Start()
-    elseif not Ashita.Is_Resting() and Status.Is_Resting() then
-        Status.Rest_End()
-        MP.TTF_Max = 0
-    elseif Status.Is_Resting() then
-        Status.Rest_Active()
+MP.TTF_Bar = function()
+    if Config.MP.Show_Time_To_Full_Bar() then
+        UI.PushStyleColor(ImGuiCol_PlotHistogram, {0.0, 0.50, 1.0, 1.0})
+        UI.ProgressBar(MP.Progress(), {-1, Rest.Bar.Height}, MP.TTF_Timer())
+        UI.PopStyleColor(1)
     end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Calcualtes how much MP is needed to get to full MP.
--- The progress bar will not be reset for refresh ticks.
--- ------------------------------------------------------------------------------------------------------
-MP.MP_To_Full = function()
-    local new_mp_needed = MP.Util.Missing_MP()
-
-    if new_mp_needed ~= MP.Needed then
-        -- If we only gained a small amount of MP then it was probably from refresh and shouldn't count as a tick.
-        if (MP.Needed - new_mp_needed) > MP.Enum.BASE_HMP then
-            Ticks.New()
-        end
-        MP.Time_To_Full(new_mp_needed)
-    end
-
-    MP.Needed = new_mp_needed
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Calculates how much time remains until full MP. This gets called every time there is an MP change.
--- ------------------------------------------------------------------------------------------------------
----@param mp_needed integer
--- ------------------------------------------------------------------------------------------------------
-MP.Time_To_Full = function(mp_needed)
-    local total_time = 0
-
-    -- Only during first tick.
-    if not Ticks.Is_First_Tick() then
-        total_time = total_time + 20
-        mp_needed = mp_needed - MP.Clear_Mind.Base_HMP()
-    end
-
-    -- Subsequent ticks if more MP needs to be recovered.
-    if mp_needed < 0 then mp_needed = 0 end
-    local ticks = Ticks.Get_Current_Tick()
-    while mp_needed > 0 do
-        ticks = ticks + 1
-        total_time = total_time + 10
-        mp_needed = mp_needed
-                    - MP.Clear_Mind.Base_HMP()
-                    - MP.Clear_Mind.Inc_HMP() * ticks
-                    - MP.Equipment.MP()
-                    - MP.Clear_Mind.MP()
-                    - MP.Food.Get_HMP()
-    end
-
-    MP.TTF = total_time
-    if MP.TTF_Max == 0 then MP.TTF_Max = total_time end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Calculates how much the player should get on the next tick.
--- ------------------------------------------------------------------------------------------------------
----@return integer
--- ------------------------------------------------------------------------------------------------------
-MP.Next_Tick = function()
-    MP.Breakdown.Base = MP.Clear_Mind.Base_HMP()
-    MP.Breakdown.Increment = (MP.Clear_Mind.Inc_HMP() * Ticks.Get_Current_Tick()) or 0
-    MP.Breakdown.Gear = MP.Equipment.MP() or 0
-    MP.Breakdown.CM = MP.Clear_Mind.MP() or 0
-    MP.Breakdown.Food = MP.Food.Get_HMP() or 0
-
-    local tick_amount = MP.Breakdown.Base + MP.Breakdown.Increment + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
-    MP.Next = Ashita.Current_MP() + tick_amount
-
-    return tick_amount
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -169,23 +91,32 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Show the breakdown of the tick.
 -- ------------------------------------------------------------------------------------------------------
-MP.Tick_Breakdown = function()
-    local tick_bonus = " (" .. tostring(MP.Clear_Mind.Inc_HMP()) .. "*" .. tostring(Ticks.Get_Current_Tick()) .. ")"
-    local cm_rank = MP.Clear_Mind.Rank()
+MP.Tick_Breakdown = function(col_flags, width)
+    local tick_bonus = " (" .. tostring(Clear_Mind.Inc_HMP()) .. "*" .. tostring(Ticks.Get_Current_Tick()) .. ")"
+    local cm_rank = Clear_Mind.Rank()
 
-    UI.Text("Base HMP   : " .. tostring(MP.Breakdown.Base))
-    UI.Text("Tick Bonus : " .. tostring(MP.Breakdown.Increment) .. tick_bonus)
-    UI.Text("Clear Mind : " .. tostring(MP.Breakdown.CM) .. " (" .. MP.Clear_Mind.Display_Rank(cm_rank) .. ")")
-    UI.Text("Gear Bonus : " .. tostring(MP.Breakdown.Gear))
-    UI.Text("Food Bonus : " .. tostring(MP.Breakdown.Food) .. " (" .. MP.Food.Get_Name() .. ")")
-end
+    UI.Text("MP")
+    if UI.BeginTable("MP Breakdown", 2) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
 
--- ------------------------------------------------------------------------------------------------------
--- Shows the MP line from under the bar.
--- ------------------------------------------------------------------------------------------------------
-MP.Bar_MP_Line = function()
-    if MP.Config.Show_Next_Tick() then UI.Text("Next: MP+" .. tostring(MP.Next_Tick())) end
-    if MP.Config.Show_Breakdown() then MP.Tick_Breakdown() end
+        UI.TableNextColumn() UI.Text("Base HMP")
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Base))
+
+        UI.TableNextColumn() UI.Text("Tick Bonus")
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Increment) .. tick_bonus)
+
+        UI.TableNextColumn() UI.Text("Clear Mind")
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.CM) .. " (" .. Clear_Mind.Display_Rank(cm_rank) .. ")")
+
+        UI.TableNextColumn() UI.Text("Gear Bonus")
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Gear))
+
+        UI.TableNextColumn() UI.Text("Food Bonus")
+        UI.TableNextColumn() UI.Text(tostring(MP.Breakdown.Food))
+
+        UI.EndTable()
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -194,10 +125,16 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 MP.TTF_Timer = function()
+    local next_tick = HPMP.Next_Tick()
+    if not next_tick then return "MP: ---" end
+
     local time_remaining = MP.Get_Time_To_Full() - Ticks.Get_Duration()
     if time_remaining < 0 then time_remaining = 0 end
     local time_string = Timer.Format(time_remaining)
     if time_remaining == 0 then time_string = "---" end
+
+    if Config.Bar.Show_Next_Tick() then time_string = time_string .. " (+" .. tostring(next_tick.mp) .. ")" end
+
     return "MP: " .. time_string
 end
 

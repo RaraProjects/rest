@@ -28,6 +28,39 @@ Ashita.Is_Resting = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Gets a player's maximum HP.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Max_HP = function()
+    -- This value doesn't update in time. I usually have to open the equipment menu to get it to update.
+    local player = AshitaCore:GetMemoryManager():GetPlayer()
+    if not player then return 0 end
+    return player:GetHPMax()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets a player's current HP.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Current_HP = function()
+    local party = AshitaCore:GetMemoryManager():GetParty()
+    if not party then return 0 end
+    if party:GetMemberIsActive(0) == 1 then
+        return party:GetMemberHP(0)
+    end
+    return 0
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Calculates the difference between max HP and current HP.
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Missing_HP = function()
+    return Ashita.Max_HP() - Ashita.Current_HP()
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Gets a player's maximum MP.
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
@@ -51,6 +84,13 @@ Ashita.Current_MP = function()
         return party:GetMemberMP(0)
     end
     return 0
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Calculates the difference between max MP and current MP.
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Missing_MP = function()
+    return Ashita.Max_MP() - Ashita.Current_MP()
 end
 
 -- ------------------------------------------------------------------------------------------------------

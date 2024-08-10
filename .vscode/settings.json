@@ -17,6 +17,7 @@
         "ImGuiTabBarFlags_None",
         "ImGuiSliderFlags_None",
         "ImGuiWindowFlags_NoMove",
-        "ImGuiCol_PlotHistogram"
+        "ImGuiCol_PlotHistogram",
+        "ImGuiTableColumnFlags_None"
     ]
 }

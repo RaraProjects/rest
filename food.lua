@@ -1,17 +1,21 @@
-MP.Food = T{}
+Food = T{}
 
-MP.Food.Name = "Unknown"
-MP.Food.HMP_Value = 0
+Food.Name = "Unknown"
+Food.HHP_Value = 0
+Food.HMP_Value = 0
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates additional HMP from food.
 -- ------------------------------------------------------------------------------------------------------
----@return integer
+---@return table
 -- ------------------------------------------------------------------------------------------------------
-MP.Food.Get_HMP = function()
+Food.HPMP = function()
     local has_food = Ashita.Has_Food()
-    if not has_food then MP.Food.HMP_Value = 0 end
-    return MP.Food.HMP_Value
+    if not has_food then
+        Food.HHP_Value = 0
+        Food.HMP_Value = 0
+    end
+    return {hhp = Food.HHP_Value, hmp = Food.HMP_Value}
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -19,10 +23,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-MP.Food.Get_Name = function()
+Food.Get_Name = function()
     local has_food = Ashita.Has_Food()
-    if not has_food then MP.Food.Name = "None" end
-    return MP.Food.Name
+    if not has_food then Food.Name = "No Food" end
+    return Food.Name
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -30,9 +34,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param hmp integer
 -- ------------------------------------------------------------------------------------------------------
-MP.Food.Set_HMP = function(hmp)
+Food.Set_HMP = function(hmp)
     if not hmp then return nil end
-    MP.Food.HMP_Value = hmp
+    Food.HMP_Value = hmp
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -40,7 +44,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param name string
 -- ------------------------------------------------------------------------------------------------------
-MP.Food.Set_Name = function(name)
+Food.Set_Name = function(name)
     if not name then return nil end
-    MP.Food.Name = name
+    Food.Name = name
 end
