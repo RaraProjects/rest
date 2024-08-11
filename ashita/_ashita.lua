@@ -55,6 +55,20 @@ Ashita.Current_HP = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Gets a player's current HP percentage.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.HPP = function()
+    local party = AshitaCore:GetMemoryManager():GetParty()
+    if not party then return 0 end
+    if party:GetMemberIsActive(0) == 1 then
+        return party:GetMemberHPPercent(0)
+    end
+    return 0
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Calculates the difference between max HP and current HP.
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Missing_HP = function()
@@ -70,7 +84,9 @@ Ashita.Max_MP = function()
     -- This value doesn't update in time. I usually have to open the equipment menu to get it to update.
     local player = AshitaCore:GetMemoryManager():GetPlayer()
     if not player then return 0 end
-    return player:GetMPMax()
+    local max_mp = player:GetMPMax()
+    if not max_mp then return 0 end
+    return max_mp
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -83,6 +99,20 @@ Ashita.Current_MP = function()
     if not party then return 0 end
     if party:GetMemberIsActive(0) == 1 then
         return party:GetMemberMP(0)
+    end
+    return 0
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets a player's current MP percentage.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.MPP = function()
+    local party = AshitaCore:GetMemoryManager():GetParty()
+    if not party then return 0 end
+    if party:GetMemberIsActive(0) == 1 then
+        return party:GetMemberMPPercent(0)
     end
     return 0
 end

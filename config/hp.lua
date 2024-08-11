@@ -33,10 +33,3 @@ end
 Config.HP.Show_HP = function()
     return Rest.HP.Show_HP
 end
-
-------------------------------------------------------------------------------------------------------
--- Retrieves the show show next tick setting.
-------------------------------------------------------------------------------------------------------
-Config.HP.Show_Next_Tick = function()
-    return Rest.HP.Show_Next_Tick
-end

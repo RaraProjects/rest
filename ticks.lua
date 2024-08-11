@@ -17,37 +17,50 @@ Ticks.Duration = 0
 -- The progress bar will not be reset for refresh ticks.
 -- ------------------------------------------------------------------------------------------------------
 Ticks.Loop = function()
-    local new_hp_needed = Ashita.Missing_HP()
-    local new_mp_needed = Ashita.Missing_MP()
-
-    -- If our HP or MP needed is different than what we last measured then an update is necessary.
-    -- If we only gained a small amount of MP then it was probably from refresh and shouldn't count as a tick.
-    -- Using elseif here to avoid creating duplicate new ticks.
+    -- Max HP doesn't get updated right away so it can throw off HPMP needed when gear swapping upon resting.
+    local new_hp = Ashita.Current_HP()
+    local new_mp = Ashita.Current_MP()
+    local hpp = Ashita.HPP()
+    local mpp = Ashita.MPP()
+    local max_mp = Ashita.Max_MP()
     local reset_time = false
-    if new_mp_needed ~= MP.Needed then
-        if (MP.Needed - new_mp_needed) > HPMP.Enum.BASE_HMP then
+
+    -- HPMP is full. Just need to use timer based ticks.
+    if hpp == 100 and (mpp == 100 or max_mp == 0) then
+        Ticks.Timer_Fallback()
+        reset_time = true
+
+    -- HP changed.
+    elseif new_hp ~= HP.Current then
+        if (new_hp - HP.Current) > HPMP.Enum.BASE_HHP then
             Ticks.New()
         end
         reset_time = true
-    elseif new_hp_needed ~= HP.Needed then
-        if (HP.Needed - new_hp_needed) > HPMP.Enum.BASE_HHP then
+
+    -- MP changed.
+    elseif new_mp ~= MP.Current then
+        if (new_mp - MP.Current) > HPMP.Enum.BASE_HMP then
             Ticks.New()
         end
         reset_time = true
-    -- HP and MP are full. Switch to raw timer based ticks.
-    elseif new_hp_needed == 0 and new_mp_needed == 0 then
-        if not Ticks.First and (Ticks.Duration >= Ticks.Enum.FIRST) then
-            Ticks.New()
-        elseif Ticks.First and (Ticks.Duration >= Ticks.Enum.SUBSEQUENT) then
-            Ticks.New()
-        end
     end
 
     -- Sets the HP and MP TTF globals.
-    if reset_time then HPMP.Time_To_Full(new_hp_needed, new_mp_needed) end
+    if reset_time then HPMP.Time_To_Full() end
 
-    MP.Needed = new_mp_needed
-    HP.Needed = new_hp_needed
+    MP.Current = new_mp
+    HP.Current = new_hp
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Creates a new tick based on time since last tick.
+-- ------------------------------------------------------------------------------------------------------
+Ticks.Timer_Fallback = function()
+    if not Ticks.First and (Ticks.Duration >= (Ticks.Enum.FIRST + 1)) then
+        Ticks.New()
+    elseif Ticks.First and (Ticks.Duration >= (Ticks.Enum.SUBSEQUENT + 1)) then
+        Ticks.New()
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -59,6 +72,9 @@ Ticks.Rest_Start = function()
     Ticks.First = false
     Ticks.Mod = Ticks.Enum.FIRST
     Ticks.Current = 0
+    HP.Current = Ashita.Current_HP()
+    MP.Current = Ashita.Current_MP()
+    HPMP.Time_To_Full()
 end
 
 -- ------------------------------------------------------------------------------------------------------

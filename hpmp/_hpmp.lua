@@ -17,62 +17,87 @@ require("hpmp.mp")
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates how much time remains until full HP/MP. This gets called every time there is an HP/MP change.
 -- ------------------------------------------------------------------------------------------------------
----@param hp_needed integer
----@param mp_needed integer
--- ------------------------------------------------------------------------------------------------------
-HPMP.Time_To_Full = function(hp_needed, mp_needed)
+HPMP.Time_To_Full = function()
+    local hp_needed = Ashita.Missing_HP()
+    local mp_needed = Ashita.Missing_MP()
     if not hp_needed or not mp_needed then return nil end
+
+    local hpp = Ashita.HPP()
+    local mpp = Ashita.MPP()
+    if not hpp or not mpp then return nil end
 
     local hp_time = 0
     local mp_time = 0
 
+    -- Food and Equipment
+    local equip = Equipment.HPMP()
+    if not equip then return nil end
+    local food = Food.Get_HPMP()
+    if not food then return nil end
+
     -- Only during first tick.
     if not Ticks.Is_First_Tick() then
-        hp_time = hp_time + 20
-        mp_time = mp_time + 20
-        hp_needed = hp_needed - HPMP.Enum.BASE_HHP
-        mp_needed = mp_needed - Clear_Mind.Base_HMP()
+        if hpp < 100 then hp_time = hp_time + 20 end
+        if mpp < 100 then mp_time = mp_time + 20 end
+        hp_needed = hp_needed
+                    - HPMP.Enum.BASE_HHP
+                    - equip.hhp
+                    - food.hhp
+        mp_needed = mp_needed
+                    - Clear_Mind.Base_HMP()
+                    - Clear_Mind.MP()
+                    - equip.hmp
+                    - food.hmp
     end
 
     -- Subsequent ticks if more HP or MP needs to be recovered.
     if hp_needed < 0 then hp_needed = 0 end
     if mp_needed < 0 then mp_needed = 0 end
 
-    local equip = Equipment.HPMP()
-    if not equip then return nil end
-
-    local food = Food.Get_HPMP()
-    if not food then return nil end
-
     -- Get HP ticks.
-    local hp_ticks = Ticks.Get_Current_Tick()
-    while hp_needed > 0 do
-        hp_ticks = hp_ticks + 1
-        hp_time = hp_time + 10
-        hp_needed = hp_needed
-                    - HPMP.Enum.INC_HHP * hp_ticks
-                    - equip.hhp
-                    - food.hhp
+    if hpp < 100 then
+        local hp_ticks = Ticks.Get_Current_Tick()
+        while hp_needed > 0 do
+            hp_ticks = hp_ticks + 1
+            hp_time = hp_time + 10
+            hp_needed = hp_needed
+                        - HPMP.Enum.INC_HHP * hp_ticks
+                        - equip.hhp
+                        - food.hhp
+        end
     end
 
     -- Get MP ticks.
-    local mp_ticks = Ticks.Get_Current_Tick()
-    while mp_needed > 0 do
-        mp_ticks = mp_ticks + 1
-        mp_time = mp_time + 10
-        mp_needed = mp_needed
-                    - Clear_Mind.Base_HMP()
-                    - Clear_Mind.Inc_HMP() * mp_ticks
-                    - equip.hmp
-                    - Clear_Mind.MP()
-                    - food.hmp
+    if mpp < 100 then
+        local mp_ticks = Ticks.Get_Current_Tick()
+        while mp_needed > 0 do
+            mp_ticks = mp_ticks + 1
+            mp_time = mp_time + 10
+            mp_needed = mp_needed
+                        - Clear_Mind.Base_HMP()
+                        - Clear_Mind.Inc_HMP() * mp_ticks
+                        - Clear_Mind.MP()
+                        - equip.hmp
+                        - food.hmp
+        end
     end
 
     HP.TTF = hp_time
-    if HP.TTF_Max == 0 then HP.TTF_Max = hp_time end
+    if hpp == 100 then
+        HP.TTF_Max = 0
+    elseif HP.TTF_Max == 0 then
+        HP.TTF_Max = hp_time
+    end
 
-    MP.TTF = mp_time
-    if MP.TTF_Max == 0 then MP.TTF_Max = mp_time end
+    local max_mp = Ashita.Max_MP()
+    if not max_mp then max_mp = 0 end
+
+    if max_mp > 0 then MP.TTF = mp_time end
+    if mpp == 100 or mp_needed == 0 then
+        MP.TTF_Max = 0
+    elseif MP.TTF_Max == 0 then
+        MP.TTF_Max = mp_time
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------

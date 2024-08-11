@@ -33,10 +33,3 @@ end
 Config.MP.Show_MP = function()
     return Rest.MP.Show_MP
 end
-
-------------------------------------------------------------------------------------------------------
--- Retrieves the show show next tick setting.
-------------------------------------------------------------------------------------------------------
-Config.MP.Show_Next_Tick = function()
-    return Rest.MP.Show_Next_Tick
-end

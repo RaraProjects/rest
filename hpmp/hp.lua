@@ -9,10 +9,11 @@ HP.Breakdown = T{
     Food = 0,
 }
 
+HP.Current = 0      -- Current HP
 HP.Needed = 0       -- Missing HP
 HP.TTF = 0          -- Current Time to Full
 HP.Next = 0         -- How much HP we will have after the next tick
-HP.TTF_Max = 0      -- Used for the denominator in the HP progress bar.
+HP.TTF_Max = 0      -- Used for the denominator in the MP progress bar. Doesn't reset with each tick. Gets reset on end of resting.
 
 -- ------------------------------------------------------------------------------------------------------
 -- Shows the MP bar.
@@ -129,12 +130,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 HP.TTF_Timer = function()
     local next_tick = HPMP.Next_Tick()
-    if not next_tick then return "HP: ---" end
+    if not next_tick then return "HP: ----" end
 
     local time_remaining = HP.Get_Time_To_Full() - Ticks.Get_Duration()
     if time_remaining < 0 then time_remaining = 0 end
     local time_string = Timer.Format(time_remaining)
-    if time_remaining == 0 then time_string = "---" end
+    if time_remaining == 0 then time_string = "FULL" end
 
     if Config.Bar.Show_Next_Tick() then time_string = time_string .. " (+" .. tostring(next_tick.hp) .. ")" end
 
@@ -147,6 +148,6 @@ end
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
 HP.Progress = function()
-    if HP.TTF_Max == 0 then return 0 end
+    if HP.TTF_Max == 0 then return 1 end
     return 1 - ((HP.Get_Time_To_Full() - Ticks.Get_Duration()) / HP.TTF_Max)
 end

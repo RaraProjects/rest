@@ -16,10 +16,11 @@ MP.Breakdown = T{
     Food = 0,
 }
 
+MP.Current = 0      -- Current MP
 MP.Needed = 0       -- Missing MP
 MP.TTF = 0          -- Current Time to Full
 MP.Next = 0         -- How much MP we will have after the next tick
-MP.TTF_Max = 0      -- Used for the denominator in the MP progress bar.
+MP.TTF_Max = 0      -- Used for the denominator in the MP progress bar. Doesn't reset with each tick. Gets reset on end of resting.
 
 -- ------------------------------------------------------------------------------------------------------
 -- Shows the MP bar.
@@ -79,9 +80,9 @@ MP.Display_MP = function()
     local header = "MP: "
     local current_mp = Ashita.Current_MP()
     local next_string = ""
-    if Status.Is_Resting() and Rest.MP.Show_Next_Tick then
+    local max_mp = Ashita.Max_MP()
+    if max_mp > 0 and Status.Is_Resting() and Config.Bar.Show_Next_Tick() then
         local next_mp = MP.Get_Next_MP()
-        local max_mp = Ashita.Max_MP()
         local next_mpp = math.ceil((next_mp / max_mp) * 100)
         next_string = " -> " .. tostring(next_mp) .. " (" .. tostring(next_mpp) .. "%)"
     end
@@ -136,12 +137,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 MP.TTF_Timer = function()
     local next_tick = HPMP.Next_Tick()
-    if not next_tick then return "MP: ---" end
+    if not next_tick then return "MP: ----" end
 
     local time_remaining = MP.Get_Time_To_Full() - Ticks.Get_Duration()
     if time_remaining < 0 then time_remaining = 0 end
     local time_string = Timer.Format(time_remaining)
-    if time_remaining == 0 then time_string = "---" end
+    if time_remaining == 0 then time_string = "FULL" end
 
     if Config.Bar.Show_Next_Tick() then time_string = time_string .. " (+" .. tostring(next_tick.mp) .. ")" end
 
@@ -154,6 +155,6 @@ end
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
 MP.Progress = function()
-    if MP.TTF_Max == 0 then return 0 end
+    if MP.TTF_Max == 0 then return 1 end
     return 1 - ((MP.Get_Time_To_Full() - Ticks.Get_Duration()) / MP.TTF_Max)
 end
