@@ -1,12 +1,15 @@
 HP = T{}
 
+-- Horizon HMP Documentation
+-- https://horizonffxi.wiki/HP_Recovered_While_Healing
+
 HP.Breakdown = T{
     Base = HPMP.Enum.BASE_HHP,
     Increment = 0,
-    Bonus = 0,
     Gear = 0,
-    CM = 0,
     Food = 0,
+    Signet_Base = 0,
+    Signet_Increment = 0,
 }
 
 HP.Current = 0      -- Current HP
@@ -84,7 +87,9 @@ end
 -- Show the breakdown of the tick.
 -- ------------------------------------------------------------------------------------------------------
 HP.Tick_Breakdown = function()
-    local tick_bonus = tostring(HPMP.Enum.INC_HHP) .. "*" .. tostring(Ticks.Get_Current_Tick())
+    local current_tick = tostring(Ticks.Get_Current_Tick())
+    local tick_bonus = tostring(HPMP.Enum.INC_HHP) .. "*" .. current_tick
+    local signet_tick = tostring(Signet.Inc_HP()) .. "*" .. current_tick
 
     local table_flags = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
     local col_flags = bit.bor(ImGuiTableColumnFlags_None)
@@ -112,6 +117,16 @@ HP.Tick_Breakdown = function()
         UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Food))
         UI.TableNextColumn()
 
+        if Ashita.Has_Buff(Ashita.Enum.Buffs.SIGNET) then
+            UI.TableNextColumn() UI.Text("Signet Base*")
+            UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Signet_Base))
+            UI.TableNextColumn()
+
+            UI.TableNextColumn() UI.Text("Signet Tick*")
+            UI.TableNextColumn() UI.Text(tostring(HP.Breakdown.Signet_Increment))
+            UI.TableNextColumn() UI.Text(signet_tick)
+        end
+
         UI.EndTable()
     end
 end
@@ -134,12 +149,18 @@ HP.TTF_Timer = function()
 
     local time_remaining = HP.Get_Time_To_Full() - Ticks.Get_Duration()
     if time_remaining < 0 then time_remaining = 0 end
+
+    local asterisk = true
     local time_string = Timer.Format(time_remaining)
-    if time_remaining == 0 then time_string = "FULL" end
+    if time_remaining == 0 then
+        time_string = "FULL"
+        asterisk = false
+    end
+    if asterisk then time_string = time_string .. "*" end
 
-    if Config.Bar.Show_Next_Tick() then time_string = time_string .. " (+" .. tostring(next_tick.hp) .. ")" end
+    if Config.Bar.Show_Next_Tick() then time_string = time_string .. " (+" .. tostring(next_tick.hp) .. "*)" end
 
-    return "HP: " .. time_string
+    return time_string
 end
 
 -- ------------------------------------------------------------------------------------------------------

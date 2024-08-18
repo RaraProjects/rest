@@ -64,6 +64,8 @@ HPMP.Time_To_Full = function()
                         - HPMP.Enum.INC_HHP * hp_ticks
                         - equip.hhp
                         - food.hhp
+                        - Signet.Base_HP()
+                        - Signet.Inc_HP() * hp_ticks
         end
     end
 
@@ -112,18 +114,22 @@ HPMP.Next_Tick = function()
     local food = Food.Get_HPMP()
     if not food then return {hp = 0, mp = 0} end
 
+    local current_tick = Ticks.Get_Current_Tick()
+
     HP.Breakdown.Base = HPMP.Enum.BASE_HHP
-    HP.Breakdown.Increment = (HPMP.Enum.INC_HHP * Ticks.Get_Current_Tick()) or 0
+    HP.Breakdown.Increment = (HPMP.Enum.INC_HHP * current_tick) or 0
     HP.Breakdown.Gear = equip.hhp or 0
     HP.Breakdown.Food = food.hhp or 0
+    HP.Breakdown.Signet_Base = Signet.Base_HP()
+    HP.Breakdown.Signet_Increment = (Signet.Inc_HP() * current_tick) or 0
 
     MP.Breakdown.Base = Clear_Mind.Base_HMP()
-    MP.Breakdown.Increment = (Clear_Mind.Inc_HMP() * Ticks.Get_Current_Tick()) or 0
+    MP.Breakdown.Increment = (Clear_Mind.Inc_HMP() * current_tick) or 0
     MP.Breakdown.Gear = equip.hmp or 0
     MP.Breakdown.CM = Clear_Mind.MP() or 0
     MP.Breakdown.Food = food.hmp or 0
 
-    local hp_tick_amount = HP.Breakdown.Base + HP.Breakdown.Increment + HP.Breakdown.Gear + HP.Breakdown.Food
+    local hp_tick_amount = HP.Breakdown.Base + HP.Breakdown.Increment + HP.Breakdown.Gear + HP.Breakdown.Food + HP.Breakdown.Signet_Base + HP.Breakdown.Signet_Increment
     local mp_tick_amount = MP.Breakdown.Base + MP.Breakdown.Increment + MP.Breakdown.Gear + MP.Breakdown.CM + MP.Breakdown.Food
 
     HP.Next = Ashita.Current_HP() + hp_tick_amount

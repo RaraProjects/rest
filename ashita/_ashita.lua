@@ -4,6 +4,10 @@ Ashita.Enum = T{}
 Ashita.Enum.Status = T{
     RESTING = 33,
 }
+Ashita.Enum.Buffs = T{
+    FOOD   = 251,
+    SIGNET = 253,
+}
 
 Ashita.States = T{
     Zoning = false,
@@ -203,15 +207,17 @@ Ashita.Equipment = function(slot)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks if the player has the food buff or not.
+-- Checks if the player has the specified buff or not.
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Has_Food = function()
+---@param buff_id integer
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Has_Buff = function(buff_id)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return nil end
-    local food_buff = 251
+    if not player then return false end
     local buffs = player:GetBuffs()
-    for _, buff_id in pairs(buffs) do
-        if buff_id == food_buff then return true end
+    for _, id in pairs(buffs) do
+        if id == buff_id then return true end
     end
     return false
 end

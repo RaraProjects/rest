@@ -24,7 +24,7 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Food.Get_HPMP = function()
-    local has_food = Ashita.Has_Food()
+    local has_food = Ashita.Has_Buff(Ashita.Enum.Buffs.FOOD)
     if not has_food then
         Food.HHP_Value = 0
         Food.HMP_Value = 0
@@ -48,7 +48,7 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 Food.Get_Name = function()
-    local has_food = Ashita.Has_Food()
+    local has_food = Ashita.Has_Buff(Ashita.Enum.Buffs.FOOD)
     if not has_food then Food.Name = "No Food" end
     return Food.Name
 end

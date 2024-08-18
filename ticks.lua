@@ -30,18 +30,17 @@ Ticks.Loop = function()
         Ticks.Timer_Fallback()
         reset_time = true
 
-    -- HP changed.
-    elseif new_hp ~= HP.Current then
-        if (new_hp - HP.Current) > HPMP.Enum.BASE_HHP then
-            Ticks.New()
-        end
-        reset_time = true
-
     -- MP changed.
     elseif new_mp ~= MP.Current then
         if (new_mp - MP.Current) > HPMP.Enum.BASE_HMP then
             Ticks.New()
         end
+        reset_time = true
+
+    -- There are too many large sources of external healing that can trigger an inappropriate tick (cures, regen etc.)
+    -- For that reason HP ticks will rely on timer only.
+    elseif new_hp ~= HP.Current then
+        Ticks.Timer_Fallback()
         reset_time = true
     end
 
