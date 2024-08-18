@@ -172,3 +172,13 @@ HP.Progress = function()
     if HP.TTF_Max == 0 then return 1 end
     return 1 - ((HP.Get_Time_To_Full() - Ticks.Get_Duration()) / HP.TTF_Max)
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows the HP calculation disclaimer.
+-- ------------------------------------------------------------------------------------------------------
+HP.Disclaimer = function()
+    if not Rest.HP.TTF_Calc_Disclaimer then
+        UI.Text("*HP calculation incomplete.")
+        if UI.SmallButton("Dismiss") then Rest.HP.TTF_Calc_Disclaimer = true end
+    end
+end

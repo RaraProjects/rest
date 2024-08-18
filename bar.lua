@@ -38,6 +38,7 @@ Bar.Display = function()
         UI.ProgressBar(Ticks.Progress(), {-1, Rest.Bar.Height}, Ticks.Get_Countdown())
         HP.TTF_Bar()
         MP.TTF_Bar()
+        HP.Disclaimer()
     end
     UI.End()
 end

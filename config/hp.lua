@@ -4,6 +4,7 @@ Config.HP.ALIAS = "hp"
 Config.HP.Defaults = T{
     Show_HP = true,
     Show_Time_To_Full_Bar = true,
+    TTF_Calc_Disclaimer = false,             -- false = not acknowledged
 }
 
 ------------------------------------------------------------------------------------------------------
