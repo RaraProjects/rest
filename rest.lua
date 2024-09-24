@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Rest"
-addon.version = "08.18.24.00"
+addon.version = "08.18.24.01"
 -- Horizon approved addon (addonreq-0524)
 
 _Globals = {}

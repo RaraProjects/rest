@@ -4,7 +4,7 @@ HPMP.Enum = T{
     BASE_HHP = 10,
     INC_HHP  = 4,
     BASE_HMP = 12,
-    INC_HMP  = 4,
+    INC_HMP  = 4,   -- Retail: 1
 }
 
 HPMP.Column_Widths = T{
