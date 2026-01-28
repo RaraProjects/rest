@@ -1,12 +1,13 @@
 Config = T{}
 
-Config.Visible = {false}
+Config.Visible = { false }
 Config.Window_Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
     ImGuiWindowFlags_NoFocusOnAppearing,
-    ImGuiWindowFlags_NoNav)
+    ImGuiWindowFlags_NoNav
+)
 
-Config.ALIAS = "config"
+Config.ALIAS = 'config'
 Config.Defaults = T{
     X_Pos = 100,
     Y_Pos = 100,
@@ -14,13 +15,33 @@ Config.Defaults = T{
 
 Config.Settings = T{}
 Config.Settings.Draggable_Width = 100
-Config.Settings.Scaling_Set = false
-Config.Reset_Position = true
+Config.Settings.Scaling_Set     = false
+Config.Reset_Position           = true
 
-require("config.widgets")
-require("config.mp")
-require("config.hp")
-require("config.bar")
+require('config.widgets')
+require('config.mp')
+require('config.hp')
+require('config.bar')
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows configuration options.
+-- ------------------------------------------------------------------------------------------------------
+local revert = function()
+    if UI.BeginTabItem('Revert') then
+        Config.Widgets.Revert()
+        UI.EndTabItem()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the window scaling.
+------------------------------------------------------------------------------------------------------
+Config.SetWindowScale = function()
+    if not Config.Scaling_Set then
+        UI.SetWindowFontScale(Rest.Bar.Window_Scaling)
+        Config.Scaling_Set = true
+    end
+end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Populates the configuration window.
@@ -32,22 +53,29 @@ Config.Display = function()
             UI.SetNextWindowPos({Rest.Config.X_Pos, Rest.Config.Y_Pos}, ImGuiCond_Always)
             Config.Reset_Position = false
         end
-        if UI.Begin("Rest Settings", Config.Visible, Config.Window_Flags) then
-            Rest.Config.X_Pos, Rest.Config.Y_Pos = UI.GetWindowPos()
-            Config.Set_Window_Scale()
 
-            HPMP.Next_Tick()
-            if UI.BeginTabBar("Settings Tabs", ImGuiTabBarFlags_None) then
-                if UI.BeginTabItem("Info") then
-                    UI.Text(Food.Get_Name())
+        if UI.Begin('Rest Settings', Config.Visible, Config.Window_Flags) then
+            Rest.Config.X_Pos, Rest.Config.Y_Pos = UI.GetWindowPos()
+            Config.SetWindowScale()
+
+            HPMP.NextTick()
+            if UI.BeginTabBar('Settings Tabs', ImGuiTabBarFlags_None) then
+                if UI.BeginTabItem('Info') then
+                    UI.Text(Food.GetName())
+
                     UI.Separator()
-                    HP.Tick_Breakdown()
+
+                    HP.TickBreakdown()
+
                     UI.Separator()
-                    MP.Tick_Breakdown()
+
+                    MP.TickBreakdown()
+
                     UI.EndTabItem()
                 end
+
                 Config.Bar.Populate()
-                Config.Revert()
+                revert()
                 UI.EndTabBar()
             end
 
@@ -57,28 +85,8 @@ Config.Display = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Shows configuration options.
--- ------------------------------------------------------------------------------------------------------
-Config.Revert = function()
-    if UI.BeginTabItem("Revert") then
-        Config.Widgets.Revert()
-        UI.EndTabItem()
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Toggles settings window visibility.
 -- ------------------------------------------------------------------------------------------------------
-Config.Toggle_Visible = function()
+Config.ToggleVisible = function()
     Config.Visible[1] = not Config.Visible[1]
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets the window scaling.
-------------------------------------------------------------------------------------------------------
-Config.Set_Window_Scale = function()
-    if not Config.Scaling_Set then
-        UI.SetWindowFontScale(Rest.Bar.Window_Scaling)
-        Config.Scaling_Set = true
-    end
 end

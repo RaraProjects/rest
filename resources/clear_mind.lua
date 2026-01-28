@@ -1,9 +1,10 @@
-Res.Clear_Mind = T{}
+Res.Clear_Mind = { }
 
 -- Retail values from: https://www.bg-wiki.com/ffxi/Clear_Mind
 
 -- https://horizonffxi.wiki/White_Mage
-Res.Clear_Mind.WHM = T{
+Res.Clear_Mind.WHM =
+{
     [1] = 15,   -- Retail: 20
     [2] = 35,   -- Retail: 35
     [3] = 45,   -- Retail: 50
@@ -13,7 +14,8 @@ Res.Clear_Mind.WHM = T{
 }
 
 -- https://horizonffxi.wiki/Red_Mage
-Res.Clear_Mind.RDM = T{
+Res.Clear_Mind.RDM =
+{
     [1] = 31,   -- Retail: 31
     [2] = 53,   -- Retail: 53
     [3] = 75,   -- Retail: 75
@@ -23,7 +25,8 @@ Res.Clear_Mind.RDM = T{
 }
 
 -- https://horizonffxi.wiki/Summoner
-Res.Clear_Mind.SMN = T{
+Res.Clear_Mind.SMN =
+{
     [1] = 15,   -- Retail: 15
     [2] = 30,   -- Retail: 30
     [3] = 45,   -- Retail: 45
@@ -33,7 +36,8 @@ Res.Clear_Mind.SMN = T{
 }
 
 -- https://horizonffxi.wiki/Black_Mage
-Res.Clear_Mind.BLM = T{
+Res.Clear_Mind.BLM =
+{
     [1] = 15,   -- Retail: 15
     [2] = 30,   -- Retail: 30
     [3] = 45,   -- Retail: 45
@@ -42,7 +46,8 @@ Res.Clear_Mind.BLM = T{
     [6] = 96,   -- Retail: 96
 }
 
-Res.Clear_Mind.HMP = T{
+Res.Clear_Mind.HMP =
+{
     [0] = 0,
     [1] = 3,
     [2] = 6,
@@ -52,12 +57,13 @@ Res.Clear_Mind.HMP = T{
     [6] = 18,
 }
 
-Res.Clear_Mind.Numerals = T{
-    [0] = "None",
-    [1] = "I",
-    [2] = "II",
-    [3] = "III",
-    [4] = "IV",
-    [5] = "V",
-    [6] = "VI",
+Res.Clear_Mind.Numerals =
+{
+    [0] = 'None',
+    [1] = 'I',
+    [2] = 'II',
+    [3] = 'III',
+    [4] = 'IV',
+    [5] = 'V',
+    [6] = 'VI',
 }

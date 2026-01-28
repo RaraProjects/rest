@@ -1,4 +1,4 @@
-Equipment = T{}
+Equipment = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates additional HMP from gear.
@@ -6,12 +6,15 @@ Equipment = T{}
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Equipment.HPMP = function()
-    local additional_hhp = 0
-    local additional_hmp = 0
+    local additionalHHP = 0
+    local additionalHMP = 0
+
     for slot, _ in pairs(Ashita.Slots) do
-        local item_id = Ashita.Equipment(slot)
-        additional_hhp = additional_hhp + Res.Equip_HHP(item_id)
-        additional_hmp = additional_hmp + Res.Equip_HMP(item_id)
+        local itemID = Ashita.Equipment(slot)
+
+        additionalHHP = additionalHHP + Res.EquipHHP(itemID)
+        additionalHMP = additionalHMP + Res.EquipHMP(itemID)
     end
-    return {hhp = additional_hhp, hmp = additional_hmp}
+
+    return { hhp = additionalHHP, hmp = additionalHMP }
 end

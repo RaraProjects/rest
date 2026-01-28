@@ -1,6 +1,7 @@
-Config.Bar  = T{}
+Config.Bar  = { }
 
-Config.Bar.ALIAS = "bar"
+Config.Bar.ALIAS = 'bar'
+
 Config.Bar.Defaults = T{
     Width  = 305,
     Height = 20,
@@ -19,26 +20,30 @@ Config.Bar.Defaults = T{
 -- Populates the bar settings in the settings window.
 ------------------------------------------------------------------------------------------------------
 Config.Bar.Populate = function()
-    if UI.BeginTabItem("GUI") then
-        UI.Text("Progress Bars")
-        Config.Widgets.HP_Progress_Bar()
-        Config.Widgets.MP_Progress_Bar()
-        Config.Widgets.Next_Tick()
-        Config.Widgets.Show_Countdown()
+    if UI.BeginTabItem('GUI') then
+        UI.Text('Progress Bars')
+        Config.Widgets.HpProgressBar()
+        Config.Widgets.MpProgressBar()
+        Config.Widgets.NextTick()
+        Config.Widgets.ShowCountdown()
         UI.Separator()
-        UI.Text("Additional Info")
-        Config.Widgets.Show_Food()
-        Config.Widgets.Show_HP()
-        Config.Widgets.Show_MP()
+
+        UI.Text('Additional Info')
+        Config.Widgets.ShowFood()
+        Config.Widgets.ShowHP()
+        Config.Widgets.ShowMP()
         UI.Separator()
-        UI.Text("Window Settings")
-        Config.Widgets.Auto_Hide()
+
+        UI.Text('Window Settings')
+        Config.Widgets.AutoHide()
         Config.Widgets.Background()
-        Config.Widgets.Lock_Position()
+        Config.Widgets.LockPosition()
         UI.Separator()
+
         Config.Widgets.Width()
         Config.Widgets.Height()
-        Config.Widgets.Window_Scale()
+        Config.Widgets.WindowScale()
+
         UI.EndTabItem()
     end
 end
@@ -46,7 +51,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets the window scaling.
 ------------------------------------------------------------------------------------------------------
-Config.Bar.Set_Window_Scale = function()
+Config.Bar.SetWindowScale = function()
     if not Bar.Scaling_Set then
         UI.SetWindowFontScale(Rest.Bar.Window_Scaling)
         Bar.Scaling_Set = true
@@ -56,27 +61,27 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Returns the bar show next tick setting.
 ------------------------------------------------------------------------------------------------------
-Config.Bar.Show_Next_Tick = function()
+Config.Bar.ShowNextTick = function()
     return Rest.Bar.Show_Next_Tick
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Returns the bar tick countdown timer setting.
 ------------------------------------------------------------------------------------------------------
-Config.Bar.Show_Countdown = function()
+Config.Bar.ShowCountdown = function()
     return Rest.Bar.Show_Countdown
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Returns the show background setting.
 ------------------------------------------------------------------------------------------------------
-Config.Bar.Show_Background = function()
+Config.Bar.ShowBackground = function()
     return Rest.Bar.Show_Background
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Returns the show food setting.
 ------------------------------------------------------------------------------------------------------
-Config.Bar.Show_Food = function()
+Config.Bar.ShowFood = function()
     return Rest.Bar.Show_Food
 end

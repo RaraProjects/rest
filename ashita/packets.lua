@@ -1,6 +1,6 @@
 local parser = require('packets._parser') -- from atom0s
 
-Ashita.Packets = T{}
+Ashita.Packets = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Wintersolstice converted the the action packet 0x0028 to the Windower version.
@@ -12,67 +12,69 @@ Ashita.Packets = T{}
 ---@param data table parsed packet data
 ---@return nil
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Build_Action = function (data)
-	local parsed_packet = parser.parse(data)
-	local act = {}
+Ashita.Packets.BuildAction = function (data)
+	local parsedPacket = parser.parse(data)
+	local act          = { }
 
 	-- Junk packet from server. Ignore it.
-	if parsed_packet.trg_sum == 0 then return nil end
+	if parsedPacket.trg_sum == 0 then
+        return nil
+    end
 
-	act.actor_id     = parsed_packet.m_uID
-	act.category     = parsed_packet.cmd_no
-	act.param        = parsed_packet.cmd_arg
-	act.target_count = parsed_packet.trg_sum
+	act.actor_id     = parsedPacket.m_uID
+	act.category     = parsedPacket.cmd_no
+	act.param        = parsedPacket.cmd_arg
+	act.target_count = parsedPacket.trg_sum
 	act.unknown      = 0
-	act.recast       = parsed_packet.info
-	act.targets      = {}
+	act.recast       = parsedPacket.info
+	act.targets      = { }
 
-	for _, v in ipairs(parsed_packet.target) do
-		local target = {}
+	for _, v in ipairs(parsedPacket.target) do
+		local target = { }
 
 		target.id           = v.m_uID
 		target.action_count = v.result_sum
-		target.actions      = {}
+		target.actions      = { }
 		for _, action in ipairs (v.result) do
-			local new_action = {}
+			local newAction = { }
 
-			new_action.reaction  = action.miss -- These values are different compared to windower, so the code outside of this function was adjusted.
-			new_action.animation = action.sub_kind
-			new_action.effect    = action.info
-			new_action.stagger   = action.scale
-			new_action.param     = action.value
-			new_action.message   = action.message
-			new_action.unknown   = action.bit
+			newAction.reaction  = action.miss -- These values are different compared to windower, so the code outside of this function was adjusted.
+			newAction.animation = action.sub_kind
+			newAction.effect    = action.info
+			newAction.stagger   = action.scale
+			newAction.param     = action.value
+			newAction.message   = action.message
+			newAction.unknown   = action.bit
 
 			if action.has_proc then
-				new_action.has_add_effect       = true
-				new_action.add_effect_animation = action.proc_kind
-				new_action.add_effect_effect    = action.proc_info
-				new_action.add_effect_param     = action.proc_value
-				new_action.add_effect_message   = action.proc_message
+				newAction.has_add_effect       = true
+				newAction.add_effect_animation = action.proc_kind
+				newAction.add_effect_effect    = action.proc_info
+				newAction.add_effect_param     = action.proc_value
+				newAction.add_effect_message   = action.proc_message
 			else
-				new_action.has_add_effect       = false
-				new_action.add_effect_animation = 0
-				new_action.add_effect_effect    = 0
-				new_action.add_effect_param     = 0
-				new_action.add_effect_message   = 0
+				newAction.has_add_effect       = false
+				newAction.add_effect_animation = 0
+				newAction.add_effect_effect    = 0
+				newAction.add_effect_param     = 0
+				newAction.add_effect_message   = 0
 			end
 
 			if action.has_react then
-				new_action.has_spike_effect       = true
-				new_action.spike_effect_animation = action.react_kind
-				new_action.spike_effect_effect    = action.react_info
-				new_action.spike_effect_param     = action.react_value
-				new_action.spike_effect_message   = action.react_message
+				newAction.has_spike_effect       = true
+				newAction.spike_effect_animation = action.react_kind
+				newAction.spike_effect_effect    = action.react_info
+				newAction.spike_effect_param     = action.react_value
+				newAction.spike_effect_message   = action.react_message
 			else 
-				new_action.has_spike_effect       = false
-				new_action.spike_effect_animation = 0
-				new_action.spike_effect_effect    = 0
-				new_action.spike_effect_param     = 0
-				new_action.spike_effect_message   = 0
+				newAction.has_spike_effect       = false
+				newAction.spike_effect_animation = 0
+				newAction.spike_effect_effect    = 0
+				newAction.spike_effect_param     = 0
+				newAction.spike_effect_message   = 0
 			end
 
-			table.insert(target.actions, new_action)
+			table.insert(target.actions, newAction)
 		end
 
 		table.insert(act.targets, target)

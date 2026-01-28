@@ -1,9 +1,10 @@
-Ashita.Menu = T{}
+Ashita.Menu = { }
 
-Ashita.Menu.Module  = "FFXiMain.dll"
-Ashita.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
+Ashita.Menu.Module  = 'FFXiMain.dll'
+Ashita.Menu.Pattern = '8B480C85C974??8B510885D274??3B05'
 
-Ashita.Menu.Types = T{
+Ashita.Menu.Types =
+{
     fulllog  = true,    -- Expanded chat log
     equip    = true,    -- Equipment menu
     inventor = true,    -- Inventory
@@ -61,6 +62,23 @@ Ashita.Menu.Types = T{
     itemctrl = true,    -- Choosing the number of items to select for transfer in inventory
     loot     = true,    -- Treasure Pool
     lootope  = true,    -- Cast Lot
+    meritcat = true,    -- Merit Categories
+    merit1   = true,    -- Merit Categories/Mode Switch
+    merit2   = true,    -- Merit EXP/Limit Points
+    merit3   = true,    -- Merit Raise/Lower
+    merityn  = true,    -- Yes/No on the merit upgrades
+    shop     = true,    -- Setting bazaar prices
+    automato = true,    -- Automaton equipment menu
+    bluinven = true,    -- Automaton equipment selection
+    bluequip = true,    -- BLU magic spell equip menu
+    quest00  = true,    -- Quest menu
+    quest01  = true,    -- Quest selection menu
+    miss00   = true,    -- Mission submenu
+    faqsub   = true,    -- Help Desk
+    cmbhlst  = true,    -- Synthesis History
+    mapv2    = true,    -- Map marker creation
+    mapv3    = true,    -- Map markers
+    inspect  = true,    -- Checking equipment
 }
 
 -- ------------------------------------------------------------------------------------------------------
@@ -71,14 +89,19 @@ Ashita.Menu.Types = T{
 -- ------------------------------------------------------------------------------------------------------
 ---@return string, integer
 -- ------------------------------------------------------------------------------------------------------
-function Ashita.Menu.Get_Menu_Name()
-    local menu = ashita.memory.find(Ashita.Menu.Module, 0, Ashita.Menu.Pattern, 16, 0)
-    local pointer = ashita.memory.read_uint32(menu)
-    local pointer_value = ashita.memory.read_uint32(pointer)
-    if pointer_value == 0 then return "", 0 end
-    local menu_header = ashita.memory.read_uint32(pointer_value + 4)
-    local menu_name = ashita.memory.read_string(menu_header + 0x46, 16)
-    return string.gsub(menu_name, "\x00", "")
+function Ashita.Menu.GetMenuName()
+    local menu         = ashita.memory.find(Ashita.Menu.Module, 0, Ashita.Menu.Pattern, 16, 0)
+    local pointer      = ashita.memory.read_uint32(menu)
+    local pointerValue = ashita.memory.read_uint32(pointer)
+
+    if pointerValue == 0 then
+        return '', 0
+    end
+
+    local menuHeader = ashita.memory.read_uint32(pointerValue + 4)
+    local menuName   = ashita.memory.read_string(menuHeader + 0x46, 16)
+
+    return string.gsub(menuName, '\x00', '')
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -87,12 +110,15 @@ end
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
 function Ashita.Menu.Hide()
-    local menu_name = Ashita.Menu.Get_Menu_Name()
-    if not menu_name then return true end
+    local menuName = Ashita.Menu.GetMenuName()
+
+    if not menuName then
+        return true
+    end
 
     -- Get rid of prefix junk and clip off trailing spaces.
-    menu_name = string.sub(menu_name, 9)
-    menu_name = string.gsub(menu_name, " ", "")
+    menuName = string.sub(menuName, 9)
+    menuName = string.gsub(menuName, ' ', '')
 
-    return Ashita.Menu.Types[menu_name]
+    return Ashita.Menu.Types[menuName]
 end

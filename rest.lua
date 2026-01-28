@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
     * Neither the name of React nor the
       names of its contributors may be used to endorse or promote products
       derived from this software without specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL --Metra-- BE LIABLE FOR ANY
@@ -23,41 +23,46 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
 
-addon.author = "Metra"
-addon.name = "Rest"
-addon.version = "08.18.24.01"
+addon.author  = 'Metra'
+addon.name    = 'Rest'
+addon.version = '08.18.24.01'
 -- Horizon approved addon (addonreq-0524)
 
-_Globals = {}
+_Globals = { }
 _Globals.Initialized = false
 
-UI = require("imgui")
-Settings = require("settings")
+UI       = require('imgui')
+Settings = require('settings')
 
-require("ashita._ashita")
-require("resources._resources")
-require("config._config")
-require("hpmp._hpmp")
-require("timer")
-require("bar")
-require("clear_mind")
-require("signet")
-require("equipment")
-require("food")
-require("ticks")
-require("status")
-require("intialization")
+require('ashita._ashita')
+require('resources._resources')
+require('config._config')
+require('hpmp._hpmp')
+require('timer')
+require('bar')
+require('clear_mind')
+require('signet')
+require('equipment')
+require('food')
+require('ticks')
+require('status')
+require('intialization')
 
-Rest = T{}
+Rest = T{ }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Catch the screen rendering packet.
 -- ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
-    if not _Globals.Initialized then return nil end
-    if not Ashita.Is_Logged_In() or Ashita.States.Zoning then return nil end
+    if not _Globals.Initialized then
+        return nil
+    end
 
-    Status.Check_Rest() -- Primary resting loop.
+    if not Ashita.IsLoggedIn() or Ashita.States.Zoning then
+        return nil
+    end
+
+    Status.CheckRest()  -- Primary resting loop.
     Bar.Display()       -- Populate windows.
     Config.Display()
 end)
@@ -67,11 +72,14 @@ end)
 -- https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('packet_in', 'packet_in_cb', function(packet)
-    if not _Globals.Initialized then return nil end
+    if not _Globals.Initialized then
+        return nil
+    end
+
     if packet.id == 0x00B then        -- Start Zone
-        Ashita.Is_Zoning(true)
+        Ashita.IsZoning(true)
     elseif packet.id == 0x00A then    -- End Zone
-        Ashita.Is_Zoning(false)
+        Ashita.IsZoning(false)
     end
 end)
 
@@ -85,18 +93,28 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- Action Packet
     if packet.id == 0x028 then
 
-        local action = Ashita.Packets.Build_Action(packet.data)
-        if not action then return nil end
+        local action = Ashita.Packets.BuildAction(packet.data)
 
-        local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
-        if not actor_mob then return nil end
-        if not Ashita.Mob.Is_Me(actor_mob.id) then return nil end
+        if not action then
+            return nil
+        end
+
+        local actorMob = Ashita.Mob.GetMobByID(action.actor_id)
+
+        if not actorMob then
+            return nil
+        end
+
+        if not Ashita.Mob.IsMe(actorMob.id) then
+            return nil
+        end
 
         -- Use Item
         if (action.category ==  5) then
-            local item_id = action.param
-            local stats = Res.Get_Food(item_id)
-            Food.Set_HPMP(item_id, stats)
+            local itemID = action.param
+            local stats  = Res.GetFood(itemID)
+
+            Food.SetHPMP(itemID, stats)
         end
     end
 end)
@@ -106,17 +124,17 @@ end)
 -- Influenced by HXUI: https://github.com/tirem/HXUI
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('command', 'command_cb', function (e)
-    local command_args = e.command:lower():args()
-    local arg = command_args[2]
+    local commandArgs = e.command:lower():args()
+    local arg         = commandArgs[2]
 
     ---@diagnostic disable-next-line: undefined-field
-    if table.contains({"/rest"}, command_args[1]) then
+    if table.contains({'/rest'}, commandArgs[1]) then
         if not arg then
-            Config.Toggle_Visible()
-        elseif arg == "mp" then
-            Config.MP.Toggle_MP()
-        elseif arg == "timer" or arg == "t" then
-            Config.MP.Toggle_Time_To_Full_Bar()
+            Config.ToggleVisible()
+        elseif arg == 'mp' then
+            Config.MP.ToggleMP()
+        elseif arg == 'timer' or arg == 't' then
+            Config.MP.ToggleTimeToFullBar()
         end
     end
 end)

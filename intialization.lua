@@ -24,11 +24,11 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific bar settings.
 ------------------------------------------------------------------------------------------------------
-Settings.register(Config.Bar.ALIAS, "settings_update", function(settings)
+Settings.register(Config.Bar.ALIAS, 'settings_update', function(settings)
     if settings ~= nil then
-        Rest.Bar = settings
+        Rest.Bar           = settings
         Bar.Reset_Position = true
-        Bar.Scaling_Set = false
+        Bar.Scaling_Set    = false
         Settings.save(Config.Bar.ALIAS)
     end
 end)
@@ -36,7 +36,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific MP settings.
 ------------------------------------------------------------------------------------------------------
-Settings.register(Config.MP.ALIAS, "settings_update", function(settings)
+Settings.register(Config.MP.ALIAS, 'settings_update', function(settings)
     if settings ~= nil then
         Rest.MP = settings
         Settings.save(Config.MP.ALIAS)
@@ -46,7 +46,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific HP settings.
 ------------------------------------------------------------------------------------------------------
-Settings.register(Config.HP.ALIAS, "settings_update", function(settings)
+Settings.register(Config.HP.ALIAS, 'settings_update', function(settings)
     if settings ~= nil then
         Rest.HP = settings
         Settings.save(Config.HP.ALIAS)
@@ -56,7 +56,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific MP settings.
 ------------------------------------------------------------------------------------------------------
-Settings.register(Config.ALIAS, "settings_update", function(settings)
+Settings.register(Config.ALIAS, 'settings_update', function(settings)
     if settings ~= nil then
         Rest.Config = settings
         Config.Reset_Position = true

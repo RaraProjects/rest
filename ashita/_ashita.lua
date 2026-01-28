@@ -1,35 +1,43 @@
-Ashita = T{}
+Ashita = { }
 
-Ashita.Enum = T{}
-Ashita.Enum.Status = T{
+Ashita.Enum = { }
+Ashita.Enum.Status =
+{
     RESTING = 33,
 }
-Ashita.Enum.Buffs = T{
+
+Ashita.Enum.Buffs =
+{
     FOOD   = 251,
     SIGNET = 253,
 }
 
-Ashita.States = T{
+Ashita.States =
+{
     Zoning = false,
-    Food = false,
+    Food   = false,
 }
 
-Ashita.Slots = require("ashita.slots")
-Ashita.Jobs  = require("ashita.jobs")
-require("ashita.mob")
-require("ashita.packets")
-require("ashita.menu")
+Ashita.Slots = require('ashita.slots')
+Ashita.Jobs  = require('ashita.jobs')
+
+require('ashita.mob')
+require('ashita.packets')
+require('ashita.menu')
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks whether a player is currently resting or not.
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Is_Resting = function()
+Ashita.IsResting = function()
     local player = GetPlayerEntity()
-    if not player then return false end
-    local status = player.Status
-    return status == Ashita.Enum.Status.RESTING
+
+    if not player then
+        return false
+    end
+
+    return player.Status == Ashita.Enum.Status.RESTING
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -37,10 +45,14 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Max_HP = function()
+Ashita.MaxHP = function()
     -- This value doesn't update in time. I usually have to open the equipment menu to get it to update.
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return 0 end
+
+    if not player then
+        return 0
+    end
+
     return player:GetHPMax()
 end
 
@@ -49,12 +61,17 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Current_HP = function()
+Ashita.CurrentHP = function()
     local party = AshitaCore:GetMemoryManager():GetParty()
-    if not party then return 0 end
+
+    if not party then
+        return 0
+    end
+
     if party:GetMemberIsActive(0) == 1 then
         return party:GetMemberHP(0)
     end
+
     return 0
 end
 
@@ -65,18 +82,23 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.HPP = function()
     local party = AshitaCore:GetMemoryManager():GetParty()
-    if not party then return 0 end
+
+    if not party then
+        return 0
+    end
+
     if party:GetMemberIsActive(0) == 1 then
         return party:GetMemberHPPercent(0)
     end
+
     return 0
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the difference between max HP and current HP.
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Missing_HP = function()
-    return Ashita.Max_HP() - Ashita.Current_HP()
+Ashita.MissingHP = function()
+    return Ashita.MaxHP() - Ashita.CurrentHP()
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -84,13 +106,17 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Max_MP = function()
+Ashita.MaxMP = function()
     -- This value doesn't update in time. I usually have to open the equipment menu to get it to update.
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return 0 end
-    local max_mp = player:GetMPMax()
-    if not max_mp then return 0 end
-    return max_mp
+
+    if not player then
+        return 0
+    end
+
+    local maxMP = player:GetMPMax() or 0
+
+    return maxMP
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -98,12 +124,17 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Current_MP = function()
+Ashita.CurrentMP = function()
     local party = AshitaCore:GetMemoryManager():GetParty()
-    if not party then return 0 end
+
+    if not party then
+        return 0
+    end
+
     if party:GetMemberIsActive(0) == 1 then
         return party:GetMemberMP(0)
     end
+
     return 0
 end
 
@@ -114,44 +145,64 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.MPP = function()
     local party = AshitaCore:GetMemoryManager():GetParty()
-    if not party then return 0 end
+
+    if not party then
+        return 0
+    end
+
     if party:GetMemberIsActive(0) == 1 then
         return party:GetMemberMPPercent(0)
     end
+
     return 0
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the difference between max MP and current MP.
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Missing_MP = function()
-    return Ashita.Max_MP() - Ashita.Current_MP()
+Ashita.MissingMP = function()
+    return Ashita.MaxMP() - Ashita.CurrentMP()
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets a player's main or sub job.
 -- ------------------------------------------------------------------------------------------------------
----@param sub_job? boolean
+---@param subJob? boolean
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Job = function(sub_job)
+Ashita.Job = function(subJob)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return "ERR" end
-    local job_id = player:GetMainJob()
-    if sub_job then job_id = player:GetSubJob() end
-    return Ashita.Jobs[job_id].ens
+
+    if not player then
+        return 'ERR'
+    end
+
+    local jobID = player:GetMainJob()
+
+    if subJob then
+        jobID = player:GetSubJob()
+    end
+
+    return Ashita.Jobs[jobID].ens
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets a player's main or sub job level.
 -- ------------------------------------------------------------------------------------------------------
----@param subjob? boolean
+---@param subJob? boolean
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Job_Level = function(subjob)
+Ashita.JobLevel = function(subJob)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return 0 end
-    if subjob then return player:GetSubJobLevel() end
+
+    if not player then
+        return 0
+    end
+
+    if subJob then
+        return player:GetSubJobLevel()
+    end
+
     return player:GetMainJobLevel()
 end
 
@@ -162,17 +213,20 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Is_Logged_In = function()
-    local logged_in = false
+Ashita.IsLoggedIn = function()
+    local isLoggedIn  = false
     local playerIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0)
+
     if playerIndex ~= 0 then
         local entity = AshitaCore:GetMemoryManager():GetEntity()
-        local flags = entity:GetRenderFlags0(playerIndex)
+        local flags  = entity:GetRenderFlags0(playerIndex)
+
         if bit.band(flags, 0x200) == 0x200 and bit.band(flags, 0x4000) == 0 then
-            logged_in = true
+            isLoggedIn = true
         end
     end
-    return logged_in
+
+    return isLoggedIn
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -180,7 +234,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param zoning boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Is_Zoning = function(zoning)
+Ashita.IsZoning = function(zoning)
     Ashita.States.Zoning = zoning
 end
 
@@ -193,16 +247,23 @@ end
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Equipment = function(slot)
-    local inventory_manager = AshitaCore:GetMemoryManager():GetInventory()
-    local item = inventory_manager:GetEquippedItem(slot)
-    if not item then return 0 end
-    local index = bit.band(item.Index, 0x00FF)
-    local equipment_entry = {}
-    if index ~= 0 then
-        equipment_entry.Container = bit.band(item.Index, 0xFF00) / 256
-        equipment_entry.Item = inventory_manager:GetContainerItem(equipment_entry.Container, index)
-        return equipment_entry.Item.Id
+    local inventoryManager = AshitaCore:GetMemoryManager():GetInventory()
+    local item             = inventoryManager:GetEquippedItem(slot)
+
+    if not item then
+        return 0
     end
+
+    local index          = bit.band(item.Index, 0x00FF)
+    local equipmentEntry = { }
+
+    if index ~= 0 then
+        equipmentEntry.Container = bit.band(item.Index, 0xFF00) / 256
+        equipmentEntry.Item      = inventoryManager:GetContainerItem(equipmentEntry.Container, index)
+
+        return equipmentEntry.Item.Id
+    end
+
     return 0
 end
 
@@ -212,12 +273,20 @@ end
 ---@param buff_id integer
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Has_Buff = function(buff_id)
+Ashita.HasBuff = function(buff_id)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return false end
-    local buffs = player:GetBuffs()
-    for _, id in pairs(buffs) do
-        if id == buff_id then return true end
+
+    if not player then
+        return false
     end
+
+    local buffs = player:GetBuffs()
+
+    for _, id in pairs(buffs) do
+        if id == buff_id then
+            return true
+        end
+    end
+
     return false
 end

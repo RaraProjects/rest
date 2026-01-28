@@ -1,30 +1,39 @@
-Clear_Mind = T{}
+ClearMind = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get the max clear mind level.
 -- ------------------------------------------------------------------------------------------------------
-Clear_Mind.Rank = function()
-    local main_job = Ashita.Job()
-    local main_job_level = Ashita.Job_Level()
-    local sub_job = Ashita.Job(true)
-    local sub_job_level = Ashita.Job_Level(true)
-    local cm_rank = 0
-    if Res.Clear_Mind[main_job] then
+ClearMind.Rank = function()
+    local mainJob      = Ashita.Job()
+    local mainJobLevel = Ashita.JobLevel()
+    local subJob       = Ashita.Job(true)
+    local subJobLevel  = Ashita.JobLevel(true)
+    local cmRank       = 0
+
+    if Res.Clear_Mind[mainJob] then
         for rank = 6, 1, -1 do
-            local cm_level = Res.Clear_Mind[main_job][rank]
-            if Res.Clear_Mind[main_job][rank] then
-                if main_job_level >= cm_level then return rank end
+            local cmLevel = Res.Clear_Mind[mainJob][rank]
+
+            if Res.Clear_Mind[mainJob][rank] then
+                if mainJobLevel >= cmLevel then
+                    return rank
+                end
             end
         end
-    elseif Res.Clear_Mind[sub_job] then
+
+    elseif Res.Clear_Mind[subJob] then
         for rank = 6, 1, -1 do
-            local cm_level = Res.Clear_Mind[sub_job][rank]
-            if Res.Clear_Mind[sub_job][rank] then
-                if sub_job_level >= cm_level then return rank end
+            local cmLevel = Res.Clear_Mind[subJob][rank]
+
+            if Res.Clear_Mind[subJob][rank] then
+                if subJobLevel >= cmLevel then
+                    return rank
+                end
             end
         end
     end
-    return cm_rank
+
+    return cmRank
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -33,44 +42,67 @@ end
 ---@param rank integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-Clear_Mind.Display_Rank = function(rank)
-    if not rank then return "None" end
-    if Res.Clear_Mind.Numerals[rank] then return Res.Clear_Mind.Numerals[rank] end
-    return "None"
+ClearMind.DisplayRank = function(rank)
+    if not rank then
+        return 'None'
+    end
+
+    if Res.Clear_Mind.Numerals[rank] then
+        return Res.Clear_Mind.Numerals[rank]
+    end
+
+    return 'None'
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Take the clear mind rank and translate that into additional MP gained per tick.
 -- ------------------------------------------------------------------------------------------------------
-Clear_Mind.MP = function()
-    local cm_rank = Clear_Mind.Rank()
-    if not cm_rank then return 0 end
-    return Res.Clear_Mind.HMP[cm_rank]
+ClearMind.MP = function()
+    local cmRank = ClearMind.Rank()
+
+    if not cmRank then
+        return 0
+    end
+
+    return Res.Clear_Mind.HMP[cmRank]
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Upon hitting 75 you get additional HMP per tick. (Horizon)
 -- ------------------------------------------------------------------------------------------------------
-Clear_Mind.Max_Level_Bonus = function()
-    local main_job = Ashita.Job()
-    local main_job_level = Ashita.Job_Level()
-    if main_job_level < 75 then return 0 end
-    if main_job == "RDM" then return 1 end
-    if main_job == "BLM" then return 2 end
-    if main_job == "WHM" then return 3 end
+ClearMind.MaxLevelBonus = function()
+    local mainJob      = Ashita.Job()
+    local mainJobLevel = Ashita.JobLevel()
+
+    if mainJobLevel < 75 then
+        return 0
+    end
+
+    if mainJob == 'RDM' then
+        return 1
+    end
+
+    if mainJob == 'BLM' then
+        return 2
+    end
+
+    if mainJob == 'WHM' then
+        return 3
+    end
+
     return 0
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Return the base HMP rate.
 -- ------------------------------------------------------------------------------------------------------
-Clear_Mind.Base_HMP = function()
-    return HPMP.Enum.BASE_HMP + Clear_Mind.Max_Level_Bonus()
+ClearMind.BaseHMP = function()
+    return HPMP.Enum.BASE_HMP + ClearMind.MaxLevelBonus()
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Return the incremental HMP rate.
 -- ------------------------------------------------------------------------------------------------------
-Clear_Mind.Inc_HMP = function()
-    return HPMP.Enum.INC_HMP + Clear_Mind.Max_Level_Bonus()
+ClearMind.IncHMP = function()
+    return HPMP.Enum.INC_HMP + ClearMind.MaxLevelBonus()
 end
