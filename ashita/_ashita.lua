@@ -24,6 +24,7 @@ Ashita.Jobs  = require('ashita.jobs')
 require('ashita.mob')
 require('ashita.packets')
 require('ashita.menu')
+require('ashita.chat')
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks whether a player is currently resting or not.

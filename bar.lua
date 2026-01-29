@@ -40,10 +40,11 @@ Bar.Display = function()
     end
 
     UI.SetNextWindowSize({ Rest.Bar.Width, -1 }, ImGuiCond_Always)
+    Window.SetScaling()
 
     if UI.Begin('Rest', true, flags) then
         Rest.Bar.X_Pos, Rest.Bar.Y_Pos = UI.GetWindowPos()
-        Config.Bar.SetWindowScale()
+        Window.SetLegacyScaling()
 
         -- Additional Information
         if Config.Bar.ShowFood() then
@@ -63,9 +64,12 @@ Bar.Display = function()
         HP.TTFbar()
         MP.TTFbar()
         HP.Disclaimer()
+
+        Window.SetLegacyScaling(Rest.Bar.Window_Scaling)
+        UI.End()
     end
 
-    UI.End()
+    Window.SetScaling(Rest.Bar.Window_Scaling)
 end
 
 -- ------------------------------------------------------------------------------------------------------

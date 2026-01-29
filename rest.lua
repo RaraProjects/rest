@@ -25,7 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = 'Metra'
 addon.name    = 'Rest'
-addon.version = '08.18.24.01'
+addon.version = '2026-01-28'
 -- Horizon approved addon (addonreq-0524)
 
 _Globals = { }
@@ -46,9 +46,13 @@ require('equipment')
 require('food')
 require('ticks')
 require('status')
+require('window')
+require('version')
 require('intialization')
 
 Rest = T{ }
+
+Window.SetDrawMode()
 
 -- ------------------------------------------------------------------------------------------------------
 -- Catch the screen rendering packet.

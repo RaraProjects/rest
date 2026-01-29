@@ -20,6 +20,12 @@
         "ImGuiCol_PlotHistogram",
         "ImGuiTableColumnFlags_None",
         "ImGuiTableFlags_PadOuterX",
-        "ImGuiTableFlags_Borders"
+        "ImGuiTableFlags_Borders",
+        "ImGuiTableFlags_SizingFixedFit",
+        "ImGuiTableFlags_Resizable",
+        "ImGuiTableFlags_NoHostExtendX",
+        "ImGuiCol_TableRowBg",
+        "ImGuiCol_TableRowBgAlt",
+        "ImGuiTableBgTarget_RowBg0"
     ]
 }

@@ -13,9 +13,10 @@ Config.Defaults = T{
     Y_Pos = 100,
 }
 
-Config.Settings = T{}
+Config.Settings                 = { }
 Config.Settings.Draggable_Width = 100
 Config.Settings.Scaling_Set     = false
+
 Config.Reset_Position           = true
 
 require('config.widgets')
@@ -54,21 +55,22 @@ Config.Display = function()
             Config.Reset_Position = false
         end
 
+        Window.SetScaling()
+
         if UI.Begin('Rest Settings', Config.Visible, Config.Window_Flags) then
             Rest.Config.X_Pos, Rest.Config.Y_Pos = UI.GetWindowPos()
-            Config.SetWindowScale()
+            Window.SetLegacyScaling()
 
             HPMP.NextTick()
+
             if UI.BeginTabBar('Settings Tabs', ImGuiTabBarFlags_None) then
                 if UI.BeginTabItem('Info') then
                     UI.Text(Food.GetName())
 
                     UI.Separator()
-
                     HP.TickBreakdown()
 
                     UI.Separator()
-
                     MP.TickBreakdown()
 
                     UI.EndTabItem()
@@ -76,11 +78,21 @@ Config.Display = function()
 
                 Config.Bar.Populate()
                 revert()
+
+                if UI.BeginTabItem('Update') then
+                    Version.Populate()
+
+                    UI.EndTabItem()
+                end
+
                 UI.EndTabBar()
             end
 
+            Window.SetLegacyScaling(Rest.Bar.Window_Scaling)
             UI.End()
         end
+
+        Window.SetScaling(Rest.Bar.Window_Scaling)
     end
 end
 

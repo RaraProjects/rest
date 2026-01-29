@@ -49,16 +49,6 @@ Config.Bar.Populate = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Sets the window scaling.
-------------------------------------------------------------------------------------------------------
-Config.Bar.SetWindowScale = function()
-    if not Bar.Scaling_Set then
-        UI.SetWindowFontScale(Rest.Bar.Window_Scaling)
-        Bar.Scaling_Set = true
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Returns the bar show next tick setting.
 ------------------------------------------------------------------------------------------------------
 Config.Bar.ShowNextTick = function()
