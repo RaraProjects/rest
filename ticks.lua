@@ -26,7 +26,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Moves to the next tick within an active resting session.
 -- ------------------------------------------------------------------------------------------------------
-local new = function()
+local New = function()
     Ticks.Start_Time = os.time()
     Ticks.Duration   = 0
     Ticks.First      = true
@@ -41,9 +41,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 local timerFallback = function()
     if not Ticks.First and (Ticks.Duration >= (Ticks.Enum.FIRST + 1)) then
-        new()
+        New()
     elseif Ticks.First and (Ticks.Duration >= (Ticks.Enum.SUBSEQUENT + 1)) then
-        new()
+        New()
     end
 end
 
@@ -69,7 +69,7 @@ Ticks.Loop = function()
     -- MP changed.
     elseif newMP ~= MP.Current then
         if (newMP - MP.Current) > HPMP.Enum.BASE_HMP then
-            Ticks.New()
+            New()
         end
 
         resetTime = true
