@@ -1,3 +1,7 @@
+#Update 04/04/2026
+Updated Loop logic in ticks.lua to rectify error caused when updating from 4.16 to 4.30.
+-Spux of Horizon
+
 _Horizon approved addon: addonreq-0524_
 
 ## Introduction
